@@ -1,6 +1,6 @@
 {
   "name": "@atelier-cine/desktop",
-  "productName": "Atelier_Ciné",
+  "productName": "Atelier_Cine",
   "version": "0.3.0",
   "private": true,
   "description": "Atelier_Ciné — application Mac",
@@ -19,7 +19,7 @@
   },
   "build": {
     "appId": "fr.ateliercine.app",
-    "productName": "Atelier_Ciné",
+    "productName": "Atelier_Cine",
     "copyright": "© 2026 François Pichon",
     "directories": {
       "output": "release",
@@ -51,7 +51,8 @@
         "NSNetworkVolumesUsageDescription": "Atelier_Ciné lit tes films et séries sur ton NAS.",
         "NSDocumentsFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
         "NSDownloadsFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
-        "NSDesktopFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier."
+        "NSDesktopFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "CFBundleDisplayName": "Atelier_Ciné"
       },
       "hardenedRuntime": false
     },

@@ -8,13 +8,13 @@ Médiathèque personnelle façon plateforme de streaming : tes films et séries 
 
 ```bash
 npm install            # la 1re fois (télécharge aussi Electron, ~100 Mo)
-npm run app:install    # construit « Atelier_Ciné.app », l'installe dans /Applications et la lance
+npm run app:install    # construit « Atelier_Cine.app », l'installe dans /Applications et la lance
 ```
 
 - Ensuite, lance-la comme n'importe quelle app (Launchpad, Spotlight, Dock). Relance `npm run app:install` après un `git pull` pour mettre à jour.
 - Le serveur est intégré à l'app : pas de terminal ni de navigateur.
 - Tes dossiers se choisissent dans **Réglages… (⌘,) → Médiathèque → Ajouter un dossier…** (sélecteur du Finder, `/Volumes` pour un NAS).
-- Données (index, profils, réglages) : `~/Library/Application Support/Atelier_Ciné/`.
+- Données (index, profils, réglages) : `~/Library/Application Support/Atelier_Cine/`.
 - Raccourcis : ⌘1 Accueil · ⌘2 Films · ⌘3 Séries · ⌘4 Récents · ⌘, Réglages.
 - Pour développer l'app sans l'installer : `npm run app`.
 

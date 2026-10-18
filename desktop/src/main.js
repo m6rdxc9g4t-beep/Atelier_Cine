@@ -14,10 +14,13 @@ const PREFERRED_PORT = 47321; // port fixe : le navigateur intégré garde ses p
 
 // ---------------------------------------------------------------------------
 // Environnement du backend — à définir AVANT de charger le backend (lu à l'import).
-// Données : ~/Library/Application Support/Atelier_Ciné/
+// Données : ~/Library/Application Support/Atelier_Cine/
 // ---------------------------------------------------------------------------
-app.setName('Atelier_Ciné');
-app.setPath('userData', path.join(app.getPath('appData'), 'Atelier_Ciné')); // explicite, quel que soit le lanceur
+// Noms internes en ASCII (« Atelier_Cine ») : un « é » dans les noms du paquet .app fait
+// planter Electron au démarrage sur macOS (formes Unicode composée/décomposée différentes).
+// Le nom affiché reste « Atelier_Ciné » (titre de fenêtre, À propos, Dock via CFBundleDisplayName).
+app.setPath('userData', path.join(app.getPath('appData'), 'Atelier_Cine')); // explicite, quel que soit le lanceur
+app.setAboutPanelOptions({ applicationName: 'Atelier_Ciné', applicationVersion: app.getVersion(), copyright: '© 2026 François Pichon' });
 const userData = app.getPath('userData');
 const envFile = path.join(userData, 'atelier-cine.env');
 process.env.ATELIER_RUNTIME = 'desktop';
