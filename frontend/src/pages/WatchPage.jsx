@@ -39,7 +39,7 @@ export default function WatchPage() {
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
-      <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent px-5 py-4">
+      <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent px-5 py-4 mac-window:pt-11">
         <button
           type="button"
           onClick={back}

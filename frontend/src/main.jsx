@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/outfit';
 import './index.css';
+import './lib/desktop.js';
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(

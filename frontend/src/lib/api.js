@@ -22,6 +22,9 @@ export const api = {
   ollamaStatus: () => request('/ai/status'),
   streamUrl: (id) => `/api/stream/${encodeURIComponent(id)}`,
 
+  settings: () => request('/settings'),
+  saveSettings: (data) => request('/settings', { method: 'PUT', body: data }),
+
   profiles: () => request('/profiles'),
   createProfile: (data) => request('/profiles', { method: 'POST', body: data }),
   updateProfile: (id, data) => request(`/profiles/${id}`, { method: 'PATCH', body: data }),

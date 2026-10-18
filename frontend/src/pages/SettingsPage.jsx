@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AlertTriangle, CheckCircle2, Copy, FolderSearch, Loader2, Pencil, RefreshCw, XCircle } from 'lucide-react';
+import { CheckCircle2, FolderSearch, Loader2, Pencil, RefreshCw, XCircle } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { useLibrary } from '../hooks/useLibrary.jsx';
 import { useProfiles } from '../hooks/useProfiles.jsx';
 import Avatar from '../components/Avatar.jsx';
 import ProfilesDialog from '../components/ProfilesDialog.jsx';
+import FoldersEditor from '../components/FoldersEditor.jsx';
+import { desktop } from '../lib/desktop.js';
 
 function Status({ ok, children }) {
   return (
@@ -28,28 +30,6 @@ function Panel({ id, title, children, action }) {
   );
 }
 
-function CodeBlock({ children }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () =>
-    navigator.clipboard?.writeText(children).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
-  return (
-    <div className="group relative">
-      <pre className="overflow-x-auto rounded-md bg-black/50 p-3 pr-10 font-mono text-xs leading-relaxed text-neutral-200">{children}</pre>
-      <button
-        type="button"
-        onClick={copy}
-        aria-label="Copier"
-        className="absolute top-2 right-2 grid size-7 place-items-center rounded text-neutral-400 hover:bg-white/10 hover:text-white"
-      >
-        {copied ? <CheckCircle2 className="size-4 text-emerald-400" /> : <Copy className="size-4" />}
-      </button>
-    </div>
-  );
-}
-
 const DEMO_OPTIONS = [
   { value: 'auto', label: 'Automatique', hint: 'Affiché tant qu’aucun film ou série n’est trouvé dans tes dossiers.' },
   { value: 'on', label: 'Toujours', hint: 'Pratique pour tester l’interface, même avec une médiathèque remplie.' },
@@ -57,16 +37,14 @@ const DEMO_OPTIONS = [
 ];
 
 export default function SettingsPage() {
-  const { reload, isDemo, hasReal, library, scanErrors, scannedAt, demoPref, setDemoPref, apiReachable } = useLibrary();
+  const { reload, isDemo, hasReal, library, scannedAt, demoPref, setDemoPref, apiReachable } = useLibrary();
   const { profiles, active, setActiveId, mode: profilesMode } = useProfiles();
   const { hash } = useLocation();
-  const [health, setHealth] = useState(null);
   const [ollama, setOllama] = useState(null);
   const [scan, setScan] = useState({ state: 'idle' });
   const [dialog, setDialog] = useState(null);
 
   useEffect(() => {
-    api.health().then(setHealth).catch(() => setHealth(false));
     api.ollamaStatus().then(setOllama).catch(() => setOllama(false));
   }, []);
 
@@ -86,8 +64,8 @@ export default function SettingsPage() {
     }
   };
 
-  const errors = scan.state === 'done' ? scan.res.errors : scanErrors;
-  const counts = hasReal && !isDemo ? `${library.movies.length} films · ${library.shows.length} séries` : null;
+  const plural = (n, word) => `${n} ${word}${n > 1 ? 's' : ''}`;
+  const counts = hasReal && !isDemo ? `${plural(library.movies.length, 'film')} · ${plural(library.shows.length, 'série')}` : null;
 
   return (
     <div className="max-w-3xl space-y-6 px-5 pt-24 sm:px-10 lg:px-16">
@@ -125,62 +103,24 @@ export default function SettingsPage() {
 
       <Panel id="mediatheque" title="Médiathèque">
         <div className="mb-4 flex flex-wrap gap-x-6 gap-y-2">
-          <Status ok={apiReachable}>{apiReachable ? 'API connectée' : 'API injoignable — lance « npm run dev » à la racine du projet'}</Status>
+          <Status ok={apiReachable}>{apiReachable ? (desktop ? 'Serveur intégré actif' : 'API connectée') : desktop ? 'Serveur intégré injoignable — relance l’app' : 'API injoignable — lance « npm run dev » à la racine du projet'}</Status>
           {counts && <span className="text-sm text-neutral-400">{counts} indexés</span>}
           {scannedAt && <span className="text-sm text-neutral-500">Dernier scan : {new Date(scannedAt).toLocaleString('fr-FR')}</span>}
         </div>
 
-        {health?.mediaDirs && (
-          <ul className="mb-4 space-y-1 font-mono text-xs text-neutral-400">
-            {health.mediaDirs.movies.map((d) => (
-              <li key={d}>🎬 {d}</li>
-            ))}
-            {health.mediaDirs.shows.map((d) => (
-              <li key={d}>📺 {d}</li>
-            ))}
-          </ul>
-        )}
+        <FoldersEditor onSaved={() => reload()} />
 
-        {errors?.length > 0 && (
-          <div className="mb-4 rounded-lg border border-amber-400/25 bg-amber-400/5 p-4">
-            <p className="mb-2 flex items-center gap-2 text-sm font-semibold text-amber-200">
-              <AlertTriangle className="size-4" /> {errors.length} dossier{errors.length > 1 ? 's' : ''} inaccessible{errors.length > 1 ? 's' : ''}
-            </p>
-            <ul className="space-y-1 text-xs text-neutral-300">
-              {errors.map((e) => (
-                <li key={e.path}>
-                  <span className="font-mono text-neutral-400">{e.path}</span> — {e.message}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {health && (health.envFileFound === false || errors?.length > 0) && (
-          <div className="mb-5 space-y-3 text-sm text-neutral-300">
-            <p>
-              {health.envFileFound === false ? (
-                <>Aucun fichier <code className="rounded bg-white/10 px-1">backend/.env</code> : l'API cherche dans le dossier d'exemple. </>
-              ) : null}
-              Indique tes vrais dossiers (sur Mac, un NAS monté est dans <code className="rounded bg-white/10 px-1">/Volumes</code>) :
-            </p>
-            <CodeBlock>{`cp .env.example backend/.env\nopen -e backend/.env`}</CodeBlock>
-            <CodeBlock>{`MEDIA_MOVIES_DIRS=/Volumes/NAS/Films\nMEDIA_SHOWS_DIRS=/Volumes/NAS/Series`}</CodeBlock>
-            <p className="text-xs text-neutral-500">
-              Puis redémarre (<kbd>Ctrl</kbd>+<kbd>C</kbd> et <code>npm run dev</code>). Pour juste tester le scan : <code>npm run sample -w backend</code>.
-            </p>
-          </div>
-        )}
-
+        <div className="mt-6 border-t border-white/5 pt-5">
         <button
           type="button"
           onClick={runScan}
           disabled={!apiReachable || scan.state === 'running'}
-          className="inline-flex items-center gap-2 rounded-md bg-brand px-5 py-2.5 font-semibold transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-md border border-white/15 px-4 py-2 text-sm font-semibold transition hover:border-white/40 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {scan.state === 'running' ? <Loader2 className="size-4 animate-spin" /> : <FolderSearch className="size-4" />}
-          Scanner les dossiers
+          Rescanner maintenant
         </button>
+        <span className="ml-3 text-xs text-neutral-500">Après avoir ajouté des fichiers dans tes dossiers.</span>
 
         {scan.state === 'done' && (
           <p className="mt-3 text-sm text-neutral-300">
@@ -188,6 +128,13 @@ export default function SettingsPage() {
           </p>
         )}
         {scan.state === 'error' && <p className="mt-3 text-sm text-red-400">{scan.message}</p>}
+        </div>
+
+        {desktop && (
+          <button type="button" onClick={() => desktop.openDataFolder()} className="mt-4 text-xs text-neutral-500 underline underline-offset-4 hover:text-white">
+            Ouvrir le dossier des données de l'app dans le Finder
+          </button>
+        )}
       </Panel>
 
       <Panel id="demo" title="Catalogue de démonstration">

@@ -17,6 +17,10 @@
   --spacing-sidebar: 11.5rem;
 }
 
+/* App Mac : `desktop:` cible l'interface affichée dans la fenêtre native */
+@custom-variant desktop (&:where(.is-desktop, .is-desktop *));
+@custom-variant mac-window (&:where(.is-desktop.is-darwin, .is-desktop.is-darwin *));
+
 @layer base {
   html,
   body,
@@ -41,4 +45,15 @@
 /* Masque doux sur les bords des carrousels */
 @utility edge-fade {
   mask-image: linear-gradient(to right, black 0, black calc(100% - 4rem), transparent 100%);
+}
+
+/* Barre de titre invisible de l'app Mac : on peut déplacer la fenêtre par le haut,
+   sans gêner les boutons qui s'y trouvent. */
+.app-drag {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+.is-desktop :is(button, a, input, select, textarea, video, [role='menu'], dialog) {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
 }
