@@ -1,0 +1,24 @@
+{
+  "name": "atelier-cine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Médiathèque locale façon streaming : NAS/PC + React + Express + Ollama",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c red,white \"npm:dev -w backend\" \"npm:dev -w frontend\"",
+    "dev:api": "npm run dev -w backend",
+    "dev:web": "npm run dev -w frontend",
+    "build": "npm run build -w frontend",
+    "start": "npm start -w backend",
+    "scan": "npm run scan -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  },
+  "engines": {
+    "node": ">=22.9"
+  }
+}

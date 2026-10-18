@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+/* Jetons de design — alignés sur la maquette (fonds #0f1015 / #141414, accent rouge). */
+@theme {
+  --color-ink-950: #0f1015;
+  --color-ink-900: #141414;
+  --color-ink-850: #17181d;
+  --color-ink-800: #1f2026;
+  --color-ink-700: #2a2b31;
+  --color-ink-600: #3a3b42;
+  --color-brand: #e5323b;
+  --color-brand-dark: #b8232b;
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  --spacing-sidebar: 11.5rem;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+  body {
+    @apply bg-ink-950 font-sans text-white antialiased;
+  }
+  ::selection {
+    @apply bg-brand/70 text-white;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Masque doux sur les bords des carrousels */
+@utility edge-fade {
+  mask-image: linear-gradient(to right, black 0, black calc(100% - 4rem), transparent 100%);
+}
