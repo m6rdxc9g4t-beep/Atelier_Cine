@@ -1,6 +1,6 @@
 {
   "name": "atelier-cine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Médiathèque locale façon streaming : NAS/PC + React + Express + Ollama",
   "workspaces": [

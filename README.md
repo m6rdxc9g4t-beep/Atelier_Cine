@@ -13,7 +13,9 @@ npm run sample -w backend       # (optionnel) crée une fausse médiathèque de 
 npm run dev                     # API sur :4000 + interface sur http://localhost:5173
 ```
 
-Sans backend (ou avec une médiathèque vide), l'interface affiche un **catalogue de démonstration** et un badge « Mode démo ».
+Sans backend (ou avec une médiathèque vide), l'interface affiche un **catalogue de démonstration** et un badge « Mode démo » (cliquable, il mène aux Paramètres). En démo, « Regarder » lit une bande-annonce d'exemple (`frontend/public/demo/`). Paramètres → *Catalogue de démonstration* : Automatique / Toujours / Jamais.
+
+**Profils** : menu de l'avatar en haut à droite (changer, ajouter, gérer). Ils sont enregistrés par l'API dans `backend/data/profiles.json`, donc partagés entre appareils ; le profil actif est mémorisé par appareil.
 
 Production locale : `npm run build && npm start` → tout est servi par Express sur http://localhost:4000.
 
@@ -62,6 +64,10 @@ atelier-cine/
 | POST | `/api/scan` | relance l'indexation |
 | GET | `/api/stream/:id` | lecture vidéo avec requêtes Range |
 | GET | `/api/artwork/:id/poster\|backdrop` | `poster.jpg` / `fanart.jpg` trouvés à côté des fichiers |
+| GET | `/api/profiles` | profils de la maison + palette de couleurs |
+| POST | `/api/profiles` | crée un profil `{ name, color? }` |
+| PATCH | `/api/profiles/:id` | renomme / change la couleur |
+| DELETE | `/api/profiles/:id` | supprime (jamais le dernier) |
 | GET | `/api/ai/status` | Ollama joignable ? modèles installés |
 | POST | `/api/ai/summary/:id` | synopsis + genres + tags générés par Ollama |
 

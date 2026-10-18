@@ -6,6 +6,7 @@ import { config } from './config.js';
 import libraryRoutes from './routes/library.js';
 import streamRoutes from './routes/stream.js';
 import aiRoutes from './routes/ai.js';
+import profileRoutes from './routes/profiles.js';
 
 export function createApp() {
   const app = express();
@@ -14,12 +15,18 @@ export function createApp() {
   app.use(express.json());
 
   app.get('/api/health', (req, res) => {
-    res.json({ ok: true, version: '0.1.0', mediaDirs: config.mediaDirs });
+    res.json({
+      ok: true,
+      version: '0.2.0',
+      mediaDirs: config.mediaDirs,
+      envFileFound: existsSync(config.envFile), // false = chemins par défaut (.env absent)
+    });
   });
 
   app.use('/api', libraryRoutes);
   app.use('/api', streamRoutes);
   app.use('/api', aiRoutes);
+  app.use('/api', profileRoutes);
 
   app.use('/api', (req, res) => res.status(404).json({ error: `Route inconnue : ${req.method} ${req.originalUrl}` }));
 

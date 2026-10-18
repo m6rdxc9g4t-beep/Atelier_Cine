@@ -23,6 +23,8 @@ export const config = {
     probe: process.env.SCAN_PROBE === 'true', // ffprobe sur chaque fichier (plus lent)
   },
   libraryFile: path.join(BACKEND_ROOT, 'data', 'library.json'),
+  profilesFile: process.env.PROFILES_FILE ?? path.join(BACKEND_ROOT, 'data', 'profiles.json'),
+  envFile: path.join(BACKEND_ROOT, '.env'),
   frontendDist: path.resolve(BACKEND_ROOT, '..', 'frontend', 'dist'),
   ollama: {
     url: process.env.OLLAMA_URL ?? 'http://localhost:11434',

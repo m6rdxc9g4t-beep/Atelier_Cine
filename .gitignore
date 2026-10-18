@@ -8,6 +8,7 @@ Thumbs.db
 
 # Index généré par le scanner (dépend de ta machine)
 backend/data/library.json
+backend/data/profiles.json
 backend/data/cache/
 
 # Médiathèque factice (npm run sample -w backend)

@@ -5,11 +5,13 @@ import BrowsePage from './pages/BrowsePage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import WatchPage from './pages/WatchPage.jsx';
 import { LibraryProvider } from './hooks/useLibrary.jsx';
+import { ProfilesProvider } from './hooks/useProfiles.jsx';
 
 export default function App() {
   return (
-    <LibraryProvider>
-      <Routes>
+    <ProfilesProvider>
+      <LibraryProvider>
+        <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="movies" element={<BrowsePage view="movies" />} />
@@ -18,7 +20,8 @@ export default function App() {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
         <Route path="watch/:id" element={<WatchPage />} />
-      </Routes>
-    </LibraryProvider>
+        </Routes>
+      </LibraryProvider>
+    </ProfilesProvider>
   );
 }
