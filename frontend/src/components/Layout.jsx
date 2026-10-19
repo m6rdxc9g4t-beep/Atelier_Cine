@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
 import ProfileMenu from './ProfileMenu.jsx';
 import Logo from './Logo.jsx';
 import { useLibrary } from '../hooks/useLibrary.jsx';
 
 export default function Layout() {
-  const { source } = useLibrary();
+  const { isDemo, demoPref, apiReachable, hasReal } = useLibrary();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -28,13 +28,22 @@ export default function Layout() {
           <Logo />
         </span>
         <div className="pointer-events-auto flex items-center gap-4">
-          {source === 'demo' && (
-            <span
-              className="hidden rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs text-amber-200 sm:inline"
-              title="Le backend n'est pas joignable ou la médiathèque est vide : affichage du catalogue de démonstration."
+          {isDemo && (
+            <Link
+              to="/settings#mediatheque"
+              className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs text-amber-200 transition hover:border-amber-300/60 hover:bg-amber-400/20 hover:text-amber-100"
+              title={
+                demoPref === 'on'
+                  ? 'Catalogue de démonstration forcé dans les Paramètres'
+                  : !apiReachable
+                    ? 'Backend injoignable : catalogue de démonstration affiché'
+                    : !hasReal
+                      ? 'Aucun média trouvé dans tes dossiers : catalogue de démonstration affiché'
+                      : 'Catalogue de démonstration'
+              }
             >
               Mode démo
-            </span>
+            </Link>
           )}
           <ProfileMenu />
         </div>

@@ -15,10 +15,8 @@ export default function Sidebar() {
   return (
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-sidebar flex-col border-r border-white/5 bg-ink-850/95 backdrop-blur md:flex">
-        <div className="px-6 pt-8 pb-14">
-          <NavLink to="/" aria-label="Atelier_Ciné — accueil">
-            <Logo />
-          </NavLink>
+        <div className="px-6 pt-8 pb-14 mac-window:pt-14 mac-window:pb-10">
+          <Logo />
         </div>
 
         <nav aria-label="Navigation principale" className="flex flex-col gap-3 px-3.5">

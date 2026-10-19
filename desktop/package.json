@@ -1,0 +1,64 @@
+{
+  "name": "@atelier-cine/desktop",
+  "productName": "Atelier_Cine",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Atelier_Ciné — application Mac",
+  "author": "François Pichon",
+  "main": "dist-electron/main.mjs",
+  "scripts": {
+    "bundle": "node scripts/bundle.mjs",
+    "start": "npm run bundle && electron .",
+    "dist": "npm run bundle && electron-builder --mac",
+    "install-app": "node scripts/install-mac.mjs"
+  },
+  "devDependencies": {
+    "electron": "44.9.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2"
+  },
+  "build": {
+    "appId": "fr.ateliercine.app",
+    "productName": "Atelier_Cine",
+    "copyright": "© 2026 François Pichon",
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../frontend/dist",
+        "to": "frontend"
+      }
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "mac": {
+      "target": [
+        "dir"
+      ],
+      "category": "public.app-category.entertainment",
+      "icon": "resources/icon.png",
+      "identity": "-",
+      "darkModeSupport": true,
+      "extendInfo": {
+        "LSApplicationCategoryType": "public.app-category.entertainment",
+        "NSRemovableVolumesUsageDescription": "Atelier_Ciné lit tes films et séries sur les disques externes.",
+        "NSNetworkVolumesUsageDescription": "Atelier_Ciné lit tes films et séries sur ton NAS.",
+        "NSDocumentsFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "NSDownloadsFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "NSDesktopFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "CFBundleDisplayName": "Atelier_Ciné"
+      },
+      "hardenedRuntime": false
+    },
+    "linux": {
+      "target": "dir",
+      "icon": "resources/icon.png"
+    }
+  }
+}
