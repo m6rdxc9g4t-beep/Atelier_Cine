@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld('atelier', {
   pickFolder: (title) => ipcRenderer.invoke('atelier:pick-folder', title),
   /** Ouvre le dossier de données de l'app dans le Finder. */
   openDataFolder: () => ipcRenderer.invoke('atelier:open-data-folder'),
+  /** Préférence de thème ('light' | 'dark' | 'system') : fond de la fenêtre native, mémorisé pour le prochain démarrage. */
+  setTheme: (preference) => ipcRenderer.send('atelier:set-theme', preference),
   /** Navigation déclenchée par le menu (⌘, ⌘1…). Renvoie une fonction de désabonnement. */
   onNavigate: (callback) => {
     const handler = (_event, route) => callback(route);

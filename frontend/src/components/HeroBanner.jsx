@@ -24,10 +24,16 @@ function Backdrop({ item }) {
 export default function HeroBanner({ item, onMoreInfo }) {
   if (!item) return null;
   return (
-    <section aria-label={`À l'affiche : ${item.title}`} className="relative isolate min-h-[34rem] h-[78vh] max-h-[52rem] overflow-hidden">
+    // La bannière est un « écran » : toujours dans le thème sombre, pour garder l'image intacte
+    // et un titre clair. En thème clair, elle se fond dans la page par un masque (pas de voile gris).
+    <section
+      data-theme="dark"
+      aria-label={`À l'affiche : ${item.title}`}
+      className="dark relative isolate min-h-[34rem] h-[78vh] max-h-[52rem] overflow-hidden text-fg light:[mask-image:linear-gradient(to_bottom,black_70%,transparent_88%)]"
+    >
       <Backdrop item={item} />
 
-      {/* Dégradés de lisibilité : gauche + bas vers le fond de page */}
+      {/* Dégradés de lisibilité : gauche + bas vers le fond (sombre) de la bannière */}
       <div className="absolute inset-0 bg-gradient-to-r from-page via-page/55 to-transparent md:via-page/35" />
       <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-page via-page/70 to-transparent" />
 

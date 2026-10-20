@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { CheckCircle2, FolderSearch, Loader2, Pencil, RefreshCw, XCircle } from 'lucide-react';
+import { CheckCircle2, FolderSearch, Loader2, Monitor, Moon, Pencil, RefreshCw, Sun, XCircle } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { useLibrary } from '../hooks/useLibrary.jsx';
 import { useProfiles } from '../hooks/useProfiles.jsx';
+import { useTheme } from '../hooks/useTheme.jsx';
+import { THEME_OPTIONS } from '../lib/theme.js';
 import Avatar from '../components/Avatar.jsx';
 import ProfilesDialog from '../components/ProfilesDialog.jsx';
 import FoldersEditor from '../components/FoldersEditor.jsx';
@@ -36,9 +38,12 @@ const DEMO_OPTIONS = [
   { value: 'off', label: 'Jamais', hint: 'Seulement tes fichiers. Une page vide s’affiche s’il n’y a rien.' },
 ];
 
+const THEME_ICONS = { light: Sun, dark: Moon, system: Monitor };
+
 export default function SettingsPage() {
   const { reload, isDemo, hasReal, library, scannedAt, demoPref, setDemoPref, apiReachable } = useLibrary();
   const { profiles, active, setActiveId, mode: profilesMode } = useProfiles();
+  const { preference: themePref, resolved: theme, setTheme } = useTheme();
   const { hash } = useLocation();
   const [ollama, setOllama] = useState(null);
   const [scan, setScan] = useState({ state: 'idle' });
@@ -99,6 +104,32 @@ export default function SettingsPage() {
         {profilesMode === 'local' && (
           <p className="mt-4 text-xs text-muted/80">Backend injoignable : profils enregistrés dans ce navigateur uniquement.</p>
         )}
+      </Panel>
+
+      <Panel id="apparence" title="Apparence">
+        <div role="radiogroup" aria-label="Thème de l’interface" className="inline-flex rounded-lg border border-edge-soft bg-field p-1">
+          {THEME_OPTIONS.map((o) => {
+            const Icon = THEME_ICONS[o.value];
+            return (
+              <button
+                key={o.value}
+                type="button"
+                role="radio"
+                aria-checked={themePref === o.value}
+                onClick={() => setTheme(o.value)}
+                className="inline-flex items-center gap-2 rounded-md px-4 py-1.5 text-sm text-muted transition hover:text-fg aria-checked:bg-brand-soft aria-checked:font-semibold aria-checked:text-brand-ink"
+              >
+                <Icon className="size-4" aria-hidden />
+                {o.label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-sm text-muted">{THEME_OPTIONS.find((o) => o.value === themePref)?.hint}</p>
+        {themePref === 'system' && (
+          <p className="mt-1 text-sm text-muted/80">Actuellement : thème {theme === 'dark' ? 'sombre' : 'clair'}.</p>
+        )}
+        <p className="mt-1 text-sm text-muted/80">Le lecteur vidéo reste toujours sur fond noir.</p>
       </Panel>
 
       <Panel id="mediatheque" title="Médiathèque">

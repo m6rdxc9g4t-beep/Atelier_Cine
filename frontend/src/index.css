@@ -3,8 +3,8 @@
 /* Charte « néon monochrome » de la suite Atelier (voir src/brand/atelier-brand.css) :
    toute l'interface dérive de la couleur signature de Ciné (magenta #E64980) par mélange
    et transparence — fonds, surfaces, traits, textes, halos.
-   Ciné est toujours sombre (<html data-theme="dark">) ; le thème clair est néanmoins
-   branché sur les mêmes jetons (data-theme="light").
+   Thème choisi par l'utilisateur (Paramètres → Apparence, src/lib/theme.js) :
+   sombre = <html class="dark" data-theme="dark"> (défaut), clair = <html data-theme="light">.
 
    `@theme inline` : les utilitaires pointent directement sur les jetons --atelier-*,
    résolus sur chaque élément — un sous-arbre marqué data-theme="dark" (le lecteur vidéo)
@@ -44,6 +44,9 @@
 
 /* `dark:` suit le marqueur de thème de la suite, pas la préférence du système. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *));
+
+/* `light:` : thème clair choisi sur <html> (même dans un sous-arbre resté sombre, comme la bannière). */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
 
 /* App Mac : `desktop:` cible l'interface affichée dans la fenêtre native */
 @custom-variant desktop (&:where(.is-desktop, .is-desktop *));
