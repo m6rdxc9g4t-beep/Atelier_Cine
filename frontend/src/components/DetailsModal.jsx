@@ -25,7 +25,7 @@ export default function DetailsModal({ item, onClose }) {
       ref={ref}
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(48rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-ink-850 p-0 text-white shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      className="m-auto w-[min(48rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-edge bg-surface p-0 text-fg shadow-2xl halo-strong backdrop:bg-black/70 backdrop:backdrop-blur-sm"
     >
       {item && (
         <article>
@@ -35,12 +35,12 @@ export default function DetailsModal({ item, onClose }) {
             ) : (
               <img src={item.backdrop ?? art} alt="" className="absolute inset-0 size-full object-cover" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-850 via-ink-850/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
             <button
               type="button"
               onClick={onClose}
               aria-label="Fermer"
-              className="absolute top-3 right-3 grid size-10 place-items-center rounded-full bg-black/60 hover:bg-black/80"
+              className="absolute top-3 right-3 grid size-10 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80"
             >
               <X className="size-5" />
             </button>
@@ -53,24 +53,24 @@ export default function DetailsModal({ item, onClose }) {
               <Link
                 to={`/watch/${item.id}`}
                 onClick={onClose}
-                className="inline-flex items-center gap-2 rounded-md bg-white px-6 py-2.5 font-semibold text-black hover:bg-white/85"
+                className="inline-flex items-center gap-2 atelier-btn-primary btn-primary-states rounded-md px-6 py-2.5 font-semibold transition"
               >
                 <Play className="size-5" fill="currentColor" /> Regarder
               </Link>
             </div>
-            {item.synopsis && <p className="leading-relaxed text-neutral-300">{item.synopsis}</p>}
+            {item.synopsis && <p className="leading-relaxed text-fg/80">{item.synopsis}</p>}
             {item.genres?.length > 0 && (
-              <p className="text-sm text-neutral-400">
-                <span className="text-neutral-500">Genres : </span>
+              <p className="text-sm text-muted">
+                <span className="text-muted/80">Genres : </span>
                 {item.genres.join(', ')}
               </p>
             )}
             {item.type === 'show' && item.episodes && (
-              <p className="text-sm text-neutral-400">
+              <p className="text-sm text-muted">
                 {item.seasons} saison{item.seasons > 1 ? 's' : ''} · {item.episodes} épisodes
               </p>
             )}
-            {item.path && <p className="truncate font-mono text-xs text-neutral-500" title={item.path}>{item.path}</p>}
+            {item.path && <p className="truncate font-mono text-xs text-muted/80" title={item.path}>{item.path}</p>}
           </div>
         </article>
       )}

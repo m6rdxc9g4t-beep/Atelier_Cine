@@ -1,14 +1,39 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-atelier-app="cine" class="dark" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0f1015" />
+    <!-- ≈ --atelier-bg de Ciné (sombre par défaut) ; mis à jour selon le thème actif -->
+    <meta name="theme-color" content="#120b10" />
+    <script>
+      // Applique le thème avant le premier rendu (pas de flash). Même logique que src/lib/theme.js :
+      // préférence Clair / Sombre / Système dans localStorage « atelier-cine-theme », Sombre par défaut.
+      // Sombre : class="dark" + data-theme="dark" ; clair : data-theme="light" sans classe dark.
+      (function () {
+        var root = document.documentElement;
+        var pref = 'dark';
+        try {
+          var stored = localStorage.getItem('atelier-cine-theme');
+          if (stored === 'light' || stored === 'dark' || stored === 'system') pref = stored;
+        } catch (e) {}
+        var dark = pref === 'dark';
+        if (pref === 'system') {
+          try {
+            dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          } catch (e) {}
+        }
+        root.classList.toggle('dark', dark);
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        root.style.colorScheme = dark ? 'dark' : 'light';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', dark ? '#120b10' : '#fcf3f6');
+      })();
+    </script>
     <link rel="icon" type="image/png" href="/favicon-64.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Atelier_Ciné</title>
   </head>
-  <body class="bg-ink-950">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

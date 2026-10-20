@@ -38,12 +38,12 @@ export default function WatchPage() {
     };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div data-theme="dark" className="fixed inset-0 z-50 bg-black text-white">
       <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent px-5 py-4 mac-window:pt-11">
         <button
           type="button"
           onClick={back}
-          className="inline-flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 text-sm hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-white"
+          className="inline-flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 text-sm hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-brand"
         >
           <ArrowLeft className="size-4" /> Retour
         </button>
@@ -60,8 +60,8 @@ export default function WatchPage() {
           <div className="max-w-md">
             {failed && <AlertTriangle className="mx-auto mb-4 size-10 text-amber-300" />}
             <h1 className="font-display text-3xl font-semibold">{message.title}</h1>
-            <p className="mt-3 text-neutral-400">{message.text}</p>
-            <Link to="/settings" className="mt-6 inline-block text-sm text-neutral-300 underline underline-offset-4 hover:text-white">
+            <p className="mt-3 text-muted">{message.text}</p>
+            <Link to="/settings" className="mt-6 inline-block text-sm text-brand-ink underline underline-offset-4 hover:text-fg">
               Ouvrir les Paramètres
             </Link>
           </div>

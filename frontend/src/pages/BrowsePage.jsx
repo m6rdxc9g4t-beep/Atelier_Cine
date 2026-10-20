@@ -27,18 +27,18 @@ export default function BrowsePage({ view }) {
     <div className="px-5 pt-24 sm:px-10 lg:px-16">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-4xl font-semibold">{title}</h1>
-          <p className="mt-1 text-sm text-neutral-400">
+          <h1 className="font-display text-4xl font-semibold halo-text">{title}</h1>
+          <p className="mt-1 text-sm text-muted">
             {items.length} titre{items.length > 1 ? 's' : ''}
           </p>
         </div>
-        <label className="flex w-full items-center gap-2 rounded-md border border-white/10 bg-ink-850 px-3 py-2 text-sm focus-within:border-white/40 sm:w-72">
-          <Search className="size-4 text-neutral-400" />
+        <label className="flex w-full items-center gap-2 rounded-md border border-edge-soft bg-field px-3 py-2 text-sm focus-field sm:w-72">
+          <Search className="size-4 text-muted" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Titre ou genre…"
-            className="w-full bg-transparent outline-none placeholder:text-neutral-500"
+            className="w-full bg-transparent outline-none placeholder:text-muted/80"
           />
         </label>
       </div>
@@ -50,7 +50,7 @@ export default function BrowsePage({ view }) {
           ))}
         </div>
       ) : (
-        <p className="py-20 text-center text-neutral-400">Aucun titre ne correspond.</p>
+        <p className="py-20 text-center text-muted">Aucun titre ne correspond.</p>
       )}
 
       <DetailsModal item={selected} onClose={() => setSelected(null)} />

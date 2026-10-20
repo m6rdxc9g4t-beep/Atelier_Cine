@@ -29,6 +29,8 @@ npm run dev                     # API sur :4000 + interface sur http://localhost
 
 Sans backend (ou avec une médiathèque vide), l'interface affiche un **catalogue de démonstration** et un badge « Mode démo » (cliquable, il mène aux Paramètres). En démo, « Regarder » lit une bande-annonce d'exemple (`frontend/public/demo/`). Paramètres → *Catalogue de démonstration* : Automatique / Toujours / Jamais.
 
+**Thème** : Clair / Sombre / Système dans Paramètres → *Apparence* (ou le menu de l'avatar) ; Sombre par défaut.
+
 **Profils** : menu de l'avatar en haut à droite (changer, ajouter, gérer). Ils sont enregistrés par l'API dans `backend/data/profiles.json`, donc partagés entre appareils ; le profil actif est mémorisé par appareil.
 
 Production locale : `npm run build && npm start` → tout est servi par Express sur http://localhost:4000.
@@ -72,6 +74,15 @@ atelier-cine/
         ├── data/mockLibrary.js   # catalogue de démonstration
         └── lib/              # api.js, artwork.js (affiches SVG générées), format.js
 ```
+
+## Charte graphique
+
+Charte « néon monochrome » de la suite Atelier : toute l'interface est dans la couleur signature de Ciné, **magenta #E64980** (fonds, surfaces, traits, textes secondaires, halos), par mélange et transparence.
+
+- `frontend/src/brand/atelier-brand.css` : fichier commun à la suite, copié tel quel (ne pas l'éditer ici). Il dérive tous les jetons `--atelier-*` de la signature, en sombre et en clair.
+- **Choix du thème** : Paramètres → *Apparence* (ou menu de l'avatar) : Clair / Sombre / Système, **Sombre par défaut** ; mémorisé dans ce navigateur (`localStorage` `atelier-cine-theme`), « Système » suit le réglage de l'appareil. Sur `<html data-atelier-app="cine">` : sombre = `class="dark" data-theme="dark"`, clair = `data-theme="light"` ; un script de `frontend/index.html` l'applique avant le premier rendu (pas de flash), `theme-color` et le fond de la fenêtre Mac suivent. La bannière de l'accueil et le lecteur restent sombres dans les deux thèmes.
+- `frontend/src/index.css` : couleurs Tailwind branchées sur ces jetons (`page`, `sidebar`, `surface`, `surface-2/3`, `field`, `fg`, `muted`, `edge`, `edge-soft`, `line`, `brand`, `brand-ink`, `brand-soft`, `brand-faint`) — pas de couleur d'interface en dur dans les composants.
+- Restent inchangés : affiches et décors générés, logos, couleurs qui portent un sens (statuts, badge « Mode démo », couleurs de profil). Le lecteur vidéo reste noir.
 
 ## API
 

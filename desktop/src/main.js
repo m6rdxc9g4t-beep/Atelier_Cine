@@ -3,8 +3,8 @@
  * Lance l'API Express dans le processus principal, puis ouvre une fenêtre native
  * qui affiche l'interface compilée (frontend/dist) servie par cette API.
  */
-import { app, BrowserWindow, Menu, dialog, ipcMain, shell } from 'electron';
-import { existsSync } from 'node:fs';
+import { app, BrowserWindow, Menu, dialog, ipcMain, nativeTheme, shell } from 'electron';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -30,6 +30,40 @@ process.env.ATELIER_FRONTEND_DIST = app.isPackaged
   ? path.join(process.resourcesPath, 'frontend')
   : path.resolve(here, '..', '..', 'frontend', 'dist');
 if (existsSync(envFile)) process.loadEnvFile(envFile); // réglages avancés optionnels (Ollama, profondeur de scan…)
+
+// ---------------------------------------------------------------------------
+// Thème de la fenêtre. La préférence vit dans l'interface (localStorage « atelier-cine-theme ») ;
+// l'interface la recopie ici (theme.json) pour que la fenêtre s'ouvre déjà dans la bonne couleur.
+// Défaut : Sombre, comme l'interface.
+// ---------------------------------------------------------------------------
+const themeFile = path.join(userData, 'theme.json');
+const WINDOW_BG = { dark: '#120b10', light: '#fcf3f6' }; // ≈ --atelier-bg de Ciné dans chaque thème
+const isThemePreference = (v) => v === 'light' || v === 'dark' || v === 'system';
+
+function readThemePreference() {
+  try {
+    const { preference } = JSON.parse(readFileSync(themeFile, 'utf8'));
+    return isThemePreference(preference) ? preference : 'dark';
+  } catch {
+    return 'dark';
+  }
+}
+
+const windowBackground = () => WINDOW_BG[nativeTheme.shouldUseDarkColors ? 'dark' : 'light'];
+
+let themePreference = readThemePreference();
+
+ipcMain.on('atelier:set-theme', (_event, preference) => {
+  if (!isThemePreference(preference) || preference === themePreference) return;
+  themePreference = preference;
+  nativeTheme.themeSource = preference;
+  mainWindow?.setBackgroundColor(windowBackground());
+  try {
+    writeFileSync(themeFile, JSON.stringify({ preference }));
+  } catch {
+    /* dossier de données indisponible : le choix vaut pour cette session */
+  }
+});
 
 let mainWindow = null;
 let server = null;
@@ -66,6 +100,8 @@ async function boot() {
     return;
   }
   Menu.setApplicationMenu(buildMenu());
+  nativeTheme.themeSource = themePreference; // barre de titre, menus et prefers-color-scheme suivent le choix
+  nativeTheme.on('updated', () => mainWindow?.setBackgroundColor(windowBackground()));
   createWindow();
 
   app.on('activate', () => {
@@ -81,7 +117,7 @@ function createWindow() {
     minHeight: 600,
     show: false,
     title: 'Atelier_Ciné',
-    backgroundColor: '#0f1015',
+    backgroundColor: windowBackground(), // ≈ --atelier-bg de Ciné dans le thème choisi : pas de flash au démarrage
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 18, y: 18 },
     webPreferences: {

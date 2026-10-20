@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ChevronDown, Pencil, Plus, Settings } from 'lucide-react';
+import { Check, ChevronDown, Monitor, Moon, Pencil, Plus, Settings, Sun } from 'lucide-react';
 import Avatar from './Avatar.jsx';
 import ProfilesDialog from './ProfilesDialog.jsx';
 import { useProfiles } from '../hooks/useProfiles.jsx';
+import { useTheme } from '../hooks/useTheme.jsx';
+import { THEME_OPTIONS } from '../lib/theme.js';
+
+const THEME_ICONS = { light: Sun, dark: Moon, system: Monitor };
 
 /** Avatar en haut à droite : menu pour changer de profil, en ajouter ou les gérer. */
 export default function ProfileMenu() {
   const { profiles, active, setActiveId } = useProfiles();
+  const { preference: themePref, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [dialog, setDialog] = useState(null); // null | 'manage' | 'add'
   const rootRef = useRef(null);
@@ -25,7 +30,7 @@ export default function ProfileMenu() {
     };
   }, [open]);
 
-  const item = 'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-neutral-200 transition hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline-none';
+  const item = 'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-fg/90 transition hover:bg-brand-soft focus-visible:bg-brand-soft focus-visible:outline-none';
 
   return (
     <div ref={rootRef} className="relative">
@@ -35,18 +40,18 @@ export default function ProfileMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={active ? `Profil : ${active.name}. Changer de profil` : 'Choisir un profil'}
-        className="group flex items-center gap-2 rounded-full p-1 text-neutral-300 transition hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+        className="group flex items-center gap-2 rounded-full p-1 text-fg/80 transition hover:text-fg focus-visible:outline-2 focus-visible:outline-brand light:bg-surface/85 light:pr-2 light:shadow-sm light:backdrop-blur-sm"
       >
-        <Avatar profile={active} className="ring-2 ring-white/15 transition group-hover:ring-white/40" />
+        <Avatar profile={active} className="ring-2 ring-edge-soft transition group-hover:ring-edge" />
         <ChevronDown className={`size-5 transition ${open ? 'rotate-180' : 'group-hover:translate-y-0.5'}`} />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute top-full right-0 mt-2 w-64 origin-top-right rounded-xl border border-white/10 bg-ink-850/95 p-2 shadow-2xl shadow-black/60 backdrop-blur-md"
+          className="absolute top-full right-0 mt-2 w-64 origin-top-right rounded-xl border border-edge bg-surface-2 p-2 halo-strong"
         >
-          <p className="px-3 pt-1 pb-2 text-xs font-medium tracking-wide text-neutral-500 uppercase">Qui regarde ?</p>
+          <p className="px-3 pt-1 pb-2 text-xs font-medium tracking-wide text-muted/80 uppercase">Qui regarde ?</p>
           {profiles.map((p) => (
             <button
               key={p.id}
@@ -61,25 +66,48 @@ export default function ProfileMenu() {
             >
               <Avatar profile={p} size="sm" />
               <span className="flex-1 truncate">{p.name}</span>
-              {p.id === active?.id && <Check className="size-4 text-white" />}
+              {p.id === active?.id && <Check className="size-4 text-brand-ink" />}
             </button>
           ))}
 
           {profiles.length < 8 && (
             <button type="button" role="menuitem" onClick={() => (setDialog('add'), setOpen(false))} className={item}>
-              <span className="grid size-8 place-items-center rounded-md border border-dashed border-white/30">
+              <span className="grid size-8 place-items-center rounded-md border border-dashed border-edge-soft">
                 <Plus className="size-4" />
               </span>
               Ajouter un profil
             </button>
           )}
 
-          <div className="my-2 h-px bg-white/10" />
+          <div className="my-2 h-px bg-line" />
+          <div role="group" aria-label="Thème" className="flex items-center gap-2 px-3 py-1.5">
+            <span className="flex-1 text-sm text-fg/90">Thème</span>
+            <div className="flex rounded-lg border border-edge-soft bg-field p-0.5">
+              {THEME_OPTIONS.map((o) => {
+                const Icon = THEME_ICONS[o.value];
+                return (
+                  <button
+                    key={o.value}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={themePref === o.value}
+                    aria-label={`Thème ${o.label.toLowerCase()}`}
+                    title={o.label}
+                    onClick={() => setTheme(o.value)}
+                    className="grid size-7 place-items-center rounded-md text-muted transition hover:text-fg focus-visible:outline-2 focus-visible:outline-brand aria-checked:bg-brand-soft aria-checked:text-brand-ink"
+                  >
+                    <Icon className="size-4" aria-hidden />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div className="my-2 h-px bg-line" />
           <button type="button" role="menuitem" onClick={() => (setDialog('manage'), setOpen(false))} className={item}>
-            <Pencil className="size-4 text-neutral-400" /> Gérer les profils
+            <Pencil className="size-4 text-muted" /> Gérer les profils
           </button>
           <Link to="/settings" role="menuitem" onClick={() => setOpen(false)} className={item}>
-            <Settings className="size-4 text-neutral-400" /> Paramètres
+            <Settings className="size-4 text-muted" /> Paramètres
           </Link>
         </div>
       )}

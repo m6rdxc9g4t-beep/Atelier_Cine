@@ -1,21 +1,52 @@
 @import 'tailwindcss';
 
-/* Jetons de design — alignés sur la maquette (fonds #0f1015 / #141414, accent rouge). */
-@theme {
-  --color-ink-950: #0f1015;
-  --color-ink-900: #141414;
-  --color-ink-850: #17181d;
-  --color-ink-800: #1f2026;
-  --color-ink-700: #2a2b31;
-  --color-ink-600: #3a3b42;
-  --color-brand: #e5323b;
-  --color-brand-dark: #b8232b;
+/* Charte « néon monochrome » de la suite Atelier (voir src/brand/atelier-brand.css) :
+   toute l'interface dérive de la couleur signature de Ciné (magenta #E64980) par mélange
+   et transparence — fonds, surfaces, traits, textes, halos.
+   Thème choisi par l'utilisateur (Paramètres → Apparence, src/lib/theme.js) :
+   sombre = <html class="dark" data-theme="dark"> (défaut), clair = <html data-theme="light">.
 
+   `@theme inline` : les utilitaires pointent directement sur les jetons --atelier-*,
+   résolus sur chaque élément — un sous-arbre marqué data-theme="dark" (le lecteur vidéo)
+   prend donc les valeurs sombres. */
+@theme inline {
+  /* Fonds et surfaces */
+  --color-page: var(--atelier-bg);
+  --color-sidebar: var(--atelier-sidebar);
+  --color-surface: var(--atelier-surface);
+  --color-surface-2: var(--atelier-surface-2); /* survol, menus, vignettes */
+  --color-surface-3: var(--atelier-surface-3); /* sélection */
+  --color-field: var(--atelier-field); /* champs de saisie */
+
+  /* Texte */
+  --color-fg: var(--atelier-text);
+  --color-muted: var(--atelier-muted);
+
+  /* Traits */
+  --color-edge: var(--atelier-border); /* contour des cartes */
+  --color-edge-soft: var(--atelier-border-soft); /* champs, boutons secondaires */
+  --color-line: var(--atelier-line); /* séparateurs */
+
+  /* Signature */
+  --color-brand: var(--atelier-signature);
+  --color-brand-contrast: var(--atelier-signature-contrast);
+  --color-brand-ink: var(--atelier-ink); /* texte / icône en couleur */
+  --color-brand-soft: var(--atelier-signature-soft); /* actif, tag */
+  --color-brand-faint: var(--atelier-signature-faint); /* survol */
+}
+
+@theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Outfit Variable', 'Inter Variable', ui-sans-serif, sans-serif;
 
   --spacing-sidebar: 11.5rem;
 }
+
+/* `dark:` suit le marqueur de thème de la suite, pas la préférence du système. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *));
+
+/* `light:` : thème clair choisi sur <html> (même dans un sous-arbre resté sombre, comme la bannière). */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
 
 /* App Mac : `desktop:` cible l'interface affichée dans la fenêtre native */
 @custom-variant desktop (&:where(.is-desktop, .is-desktop *));
@@ -28,10 +59,49 @@
     min-height: 100%;
   }
   body {
-    @apply bg-ink-950 font-sans text-white antialiased;
+    @apply font-sans text-fg antialiased;
+    /* Fine grille + lueur en haut, dans la couleur de l'app. --atelier-backdrop contient
+       des tailles de motif : il ne s'emploie que dans le raccourci `background`. */
+    background: var(--atelier-backdrop), var(--atelier-bg);
+    background-attachment: fixed;
   }
   ::selection {
-    @apply bg-brand/70 text-white;
+    @apply bg-brand/70 text-brand-contrast;
+  }
+}
+
+/* Cartes, panneaux, champ de recherche : halo de la signature. */
+@utility halo {
+  box-shadow: var(--atelier-glow);
+}
+
+/* Modales, menus, éléments survolés. */
+@utility halo-strong {
+  box-shadow: var(--atelier-glow-strong);
+}
+
+/* Titres de page. */
+@utility halo-text {
+  text-shadow: var(--atelier-text-glow);
+}
+
+/* Champs : bordure signature + anneau au focus. */
+@utility focus-field {
+  &:focus,
+  &:focus-within {
+    border-color: var(--atelier-signature);
+    box-shadow: var(--atelier-focus);
+  }
+}
+
+/* Compléments du bouton principal du kit (.atelier-btn-primary) : survol et focus. */
+@utility btn-primary-states {
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--atelier-signature);
+    outline-offset: 2px;
   }
 }
 
