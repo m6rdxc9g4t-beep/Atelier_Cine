@@ -81,7 +81,7 @@ function createWindow() {
     minHeight: 600,
     show: false,
     title: 'Atelier_Ciné',
-    backgroundColor: '#06111f',
+    backgroundColor: '#120b10', // ≈ --atelier-bg sombre de Ciné (charte néon monochrome)
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 18, y: 18 },
     webPreferences: {

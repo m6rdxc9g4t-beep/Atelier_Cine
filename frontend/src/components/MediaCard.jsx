@@ -12,8 +12,8 @@ export default function MediaCard({ item, onSelect, className = 'w-36 sm:w-40 xl
     <button
       type="button"
       onClick={() => onSelect?.(item)}
-      className={`group relative shrink-0 snap-start overflow-hidden rounded-lg bg-ink-800 text-left shadow-lg shadow-black/40 outline-none
-        ring-neon transition duration-300 hover:shadow-[var(--atelier-glow-strong)] focus-visible:shadow-[var(--atelier-glow-strong)] hover:z-10 hover:scale-[1.04] hover:ring-[3px] focus-visible:scale-[1.04] focus-visible:ring-[3px] ${className}`}
+      className={`group relative shrink-0 snap-start overflow-hidden rounded-lg bg-surface-2 text-left text-white shadow-lg shadow-black/30 outline-none
+        ring-brand transition duration-300 hover:shadow-[var(--atelier-glow-strong)] focus-visible:shadow-[var(--atelier-glow-strong)] hover:z-10 hover:scale-[1.04] hover:ring-[3px] focus-visible:scale-[1.04] focus-visible:ring-[3px] ${className}`}
       aria-label={`${item.title}${item.year ? ` (${item.year})` : ''}`}
     >
       <div className="aspect-[2/3] w-full">

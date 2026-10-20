@@ -14,7 +14,7 @@ export const NAV_ITEMS = [
 export default function Sidebar() {
   return (
     <>
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-sidebar flex-col border-r border-line bg-ink-850/95 backdrop-blur neon-panel md:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-sidebar flex-col border-r border-edge-soft bg-sidebar md:flex">
         <div className="px-6 pt-8 pb-14 mac-window:pt-14 mac-window:pb-10">
           <Logo />
         </div>
@@ -28,22 +28,16 @@ export default function Sidebar() {
               className={({ isActive }) =>
                 [
                   'group relative flex flex-col items-center gap-2 rounded-lg py-4 text-[0.95rem] transition-colors',
-                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon',
-                  isActive ? 'bg-brand-soft text-brand-light' : 'text-neutral-400 hover:bg-neon/5 hover:text-fg',
+                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
+                  isActive ? 'atelier-nav-active' : 'text-muted hover:bg-brand-faint hover:text-fg',
                 ].join(' ')
               }
             >
               {({ isActive }) => (
                 <>
-                  {/* Barre signature collée au bord de l'écran, comme sur la maquette */}
-                  <span
-                    aria-hidden
-                    className={`absolute top-0 -left-3.5 h-full w-1.5 rounded-r bg-brand shadow-[var(--atelier-signature-glow)] transition-opacity ${
-                      isActive ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
+                  {/* Entrée active : barre de couleur à gauche + fond en transparence (.atelier-nav-active) */}
                   <Icon
-                    className="size-7"
+                    className={`size-7 ${isActive ? 'text-brand-ink' : ''}`}
                     strokeWidth={isActive ? 2.2 : 1.8}
                     fill={isActive ? 'currentColor' : 'none'}
                     fillOpacity={isActive ? 0.15 : 0}
@@ -59,7 +53,7 @@ export default function Sidebar() {
       {/* Barre de navigation mobile */}
       <nav
         aria-label="Navigation principale"
-        className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-line bg-ink-850/95 pb-[env(safe-area-inset-bottom)] backdrop-blur neon-panel md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-edge-soft bg-sidebar/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
       >
         {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
           <NavLink
@@ -67,12 +61,12 @@ export default function Sidebar() {
             to={to}
             end={end}
             className={({ isActive }) =>
-              `relative flex flex-1 flex-col items-center gap-1 py-2.5 text-[0.7rem] ${isActive ? 'text-brand-light' : 'text-neutral-500'}`
+              `relative flex flex-1 flex-col items-center gap-1 py-2.5 text-[0.7rem] ${isActive ? 'text-brand-ink' : 'text-muted/80'}`
             }
           >
             {({ isActive }) => (
               <>
-                <span aria-hidden className={`absolute top-0 h-0.5 w-8 rounded-b bg-brand ${isActive ? '' : 'hidden'}`} />
+                <span aria-hidden className={`absolute top-0 h-0.5 w-8 rounded-b bg-brand shadow-[var(--atelier-signature-glow)] ${isActive ? '' : 'hidden'}`} />
                 <Icon className="size-5" />
                 {label}
               </>

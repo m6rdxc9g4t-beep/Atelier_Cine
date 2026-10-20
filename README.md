@@ -73,6 +73,15 @@ atelier-cine/
         └── lib/              # api.js, artwork.js (affiches SVG générées), format.js
 ```
 
+## Charte graphique
+
+Charte « néon monochrome » de la suite Atelier : toute l'interface est dans la couleur signature de Ciné, **magenta #E64980** (fonds, surfaces, traits, textes secondaires, halos), par mélange et transparence.
+
+- `frontend/src/brand/atelier-brand.css` : fichier commun à la suite, copié tel quel (ne pas l'éditer ici). Il dérive tous les jetons `--atelier-*` de la signature, en sombre et en clair.
+- `frontend/index.html` : `<html data-atelier-app="cine" data-theme="dark">`. Ciné est toujours sombre ; `data-theme="light"` donne le rendu clair, branché sur les mêmes jetons.
+- `frontend/src/index.css` : couleurs Tailwind branchées sur ces jetons (`page`, `sidebar`, `surface`, `surface-2/3`, `field`, `fg`, `muted`, `edge`, `edge-soft`, `line`, `brand`, `brand-ink`, `brand-soft`, `brand-faint`) — pas de couleur d'interface en dur dans les composants.
+- Restent inchangés : affiches et décors générés, logos, couleurs qui portent un sens (statuts, badge « Mode démo », couleurs de profil). Le lecteur vidéo reste noir.
+
 ## API
 
 | Méthode | Route | Rôle |

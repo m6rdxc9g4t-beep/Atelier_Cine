@@ -28,7 +28,7 @@ export default function Carousel({ title, children, action }) {
   };
 
   const arrow =
-    'absolute top-0 bottom-0 z-20 hidden w-12 items-center justify-center bg-ink-950/60 text-neon opacity-0 transition group-hover/row:opacity-100 hover:bg-ink-950/80 focus-visible:opacity-100 md:flex';
+    'absolute top-0 bottom-0 z-20 hidden w-12 items-center justify-center bg-page/60 text-brand-ink opacity-0 transition group-hover/row:opacity-100 hover:bg-page/80 focus-visible:opacity-100 md:flex';
 
   return (
     <section className="group/row relative" aria-label={title}>

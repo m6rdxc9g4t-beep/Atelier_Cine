@@ -11,27 +11,27 @@ const KINDS = [
 function DirRow({ path, status, onRemove }) {
   const ok = status?.readable;
   return (
-    <li className="flex items-center gap-3 rounded-md border border-line/60 bg-ink-950/50 px-3 py-2">
+    <li className="flex items-center gap-3 rounded-md border border-line bg-field px-3 py-2">
       {status ? (
         ok ? (
-          <CheckCircle2 className="size-4 shrink-0 text-emerald-400" aria-label="Accessible" />
+          <CheckCircle2 className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" aria-label="Accessible" />
         ) : (
-          <AlertTriangle className="size-4 shrink-0 text-amber-300" aria-label={status.message} />
+          <AlertTriangle className="size-4 shrink-0 text-amber-600 dark:text-amber-300" aria-label={status.message} />
         )
       ) : (
-        <span className="size-4 shrink-0 rounded-full border border-white/20" aria-label="Pas encore enregistré" />
+        <span className="size-4 shrink-0 rounded-full border border-edge-soft" aria-label="Pas encore enregistré" />
       )}
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-mono text-xs text-neutral-200" title={path}>
+        <span className="block truncate font-mono text-xs text-fg/90" title={path}>
           {path}
         </span>
-        {status && !ok && <span className="block text-xs text-amber-200/80">{status.message}</span>}
+        {status && !ok && <span className="block text-xs text-amber-700 dark:text-amber-200/80">{status.message}</span>}
       </span>
       <button
         type="button"
         onClick={onRemove}
         aria-label={`Retirer ${path}`}
-        className="grid size-7 shrink-0 place-items-center rounded text-neutral-400 hover:bg-white/10 hover:text-white"
+        className="grid size-7 shrink-0 place-items-center rounded text-muted hover:bg-brand-faint hover:text-fg"
       >
         <X className="size-4" />
       </button>
@@ -50,7 +50,7 @@ function AddDir({ kind, onAdd }) {
           const picked = await desktop.pickFolder(kind.pickTitle);
           if (picked) onAdd(picked);
         }}
-        className="inline-flex items-center gap-2 rounded-md border border-neon/25 px-3 py-1.5 text-sm text-neutral-200 hover:border-neon/60 hover:text-white"
+        className="inline-flex items-center gap-2 rounded-md border border-edge-soft px-3 py-1.5 text-sm text-fg/90 hover:border-edge hover:text-fg"
       >
         <FolderOpen className="size-4" /> Ajouter un dossier…
       </button>
@@ -71,9 +71,9 @@ function AddDir({ kind, onAdd }) {
         onChange={(e) => setValue(e.target.value)}
         placeholder={kind.key === 'movies' ? '/Volumes/NAS/Films' : '/Volumes/NAS/Series'}
         aria-label={`Nouveau dossier de ${kind.label.toLowerCase()}`}
-        className="min-w-0 flex-1 rounded-md border border-line bg-ink-900 px-3 py-1.5 font-mono text-xs outline-none placeholder:text-neutral-600 focus:border-neon"
+        className="min-w-0 flex-1 rounded-md border border-edge-soft bg-field px-3 py-1.5 font-mono text-xs outline-none placeholder:text-muted/60 focus-field"
       />
-      <button type="submit" disabled={!value.trim()} className="inline-flex items-center gap-1 rounded-md border border-neon/25 px-3 text-sm hover:border-neon/60 disabled:opacity-40">
+      <button type="submit" disabled={!value.trim()} className="inline-flex items-center gap-1 rounded-md border border-edge-soft px-3 text-sm hover:border-edge disabled:opacity-40">
         <Plus className="size-4" /> Ajouter
       </button>
     </form>
@@ -96,8 +96,8 @@ export default function FoldersEditor({ onSaved }) {
       .catch(() => setSaved(false));
   }, []);
 
-  if (saved === false) return <p className="text-sm text-neutral-400">Le serveur ne répond pas : impossible de modifier les dossiers pour l'instant.</p>;
-  if (!saved || !draft) return <Loader2 className="size-5 animate-spin text-neutral-500" />;
+  if (saved === false) return <p className="text-sm text-muted">Le serveur ne répond pas : impossible de modifier les dossiers pour l'instant.</p>;
+  if (!saved || !draft) return <Loader2 className="size-5 animate-spin text-muted/80" />;
 
   const statusOf = (p) => saved.dirStatus.find((d) => d.path === p);
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved.mediaDirs);
@@ -123,8 +123,8 @@ export default function FoldersEditor({ onSaved }) {
     <div className="space-y-5">
       {KINDS.map((kind) => (
         <div key={kind.key}>
-          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-200">
-            <kind.icon className="size-4 text-neutral-400" /> {kind.label}
+          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-fg/90">
+            <kind.icon className="size-4 text-muted" /> {kind.label}
           </h3>
           {draft[kind.key].length > 0 ? (
             <ul className="mb-2 space-y-1.5">
@@ -133,14 +133,14 @@ export default function FoldersEditor({ onSaved }) {
               ))}
             </ul>
           ) : (
-            <p className="mb-2 text-xs text-neutral-500">Aucun dossier.</p>
+            <p className="mb-2 text-xs text-muted/80">Aucun dossier.</p>
           )}
           <AddDir kind={kind} onAdd={(p) => !draft[kind.key].includes(p) && update(kind.key, [...draft[kind.key], p])} />
         </div>
       ))}
 
-      <p className="text-xs text-neutral-500">
-        Sur Mac, un NAS ou un disque externe branché apparaît dans <code className="rounded bg-white/10 px-1">/Volumes</code>. Un dossier
+      <p className="text-xs text-muted/80">
+        Sur Mac, un NAS ou un disque externe branché apparaît dans <code className="rounded bg-brand-soft px-1">/Volumes</code>. Un dossier
         momentanément absent (NAS éteint) peut rester dans la liste : il sera repris au prochain scan.
       </p>
 
@@ -149,22 +149,22 @@ export default function FoldersEditor({ onSaved }) {
           type="button"
           onClick={save}
           disabled={!dirty || state.status === 'saving'}
-          className="inline-flex items-center gap-2 btn-signature rounded-md px-5 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 atelier-btn-primary btn-primary-states rounded-md px-5 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
         >
           {state.status === 'saving' && <Loader2 className="size-4 animate-spin" />}
           Enregistrer et scanner
         </button>
         {dirty && (
-          <button type="button" onClick={() => setDraft(saved.mediaDirs)} className="text-sm text-neutral-400 hover:text-white">
+          <button type="button" onClick={() => setDraft(saved.mediaDirs)} className="text-sm text-muted hover:text-fg">
             Annuler les modifications
           </button>
         )}
         {state.status === 'done' && (
-          <span className="text-sm text-emerald-400">
+          <span className="text-sm text-emerald-600 dark:text-emerald-400">
             Enregistré — {state.scan.counts.movies} films, {state.scan.counts.shows} séries trouvés.
           </span>
         )}
-        {state.status === 'error' && <span className="text-sm text-red-400">{state.message}</span>}
+        {state.status === 'error' && <span className="text-sm text-red-600 dark:text-red-400">{state.message}</span>}
       </div>
     </div>
   );

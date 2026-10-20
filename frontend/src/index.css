@@ -1,41 +1,49 @@
 @import 'tailwindcss';
 
-/* Jetons de design — charte « néon holographique 3D » de la suite Atelier
-   (voir src/brand/atelier-brand.css) : fonds bleu nuit, structure cyan électrique,
-   couleur signature de Ciné (magenta #E64980) pour l'accent.
-   L'interface est toujours sombre : <html data-theme="dark"> allume les effets néon. */
-@theme {
-  /* Fonds et surfaces (bleu nuit) */
-  --color-ink-950: #06111f; /* fond de page */
-  --color-ink-900: #081728; /* champs de saisie */
-  --color-ink-850: #0a1b2e; /* surfaces : barre latérale, panneaux, modales */
-  --color-ink-800: #10283f; /* surfaces élevées : vignettes */
-  --color-ink-700: #143552;
-  --color-ink-600: #17405c;
+/* Charte « néon monochrome » de la suite Atelier (voir src/brand/atelier-brand.css) :
+   toute l'interface dérive de la couleur signature de Ciné (magenta #E64980) par mélange
+   et transparence — fonds, surfaces, traits, textes, halos.
+   Ciné est toujours sombre (<html data-theme="dark">) ; le thème clair est néanmoins
+   branché sur les mêmes jetons (data-theme="light").
 
-  /* Texte et bordures */
-  --color-fg: #e6f7ff;
-  --color-line: #17405c;
+   `@theme inline` : les utilitaires pointent directement sur les jetons --atelier-*,
+   résolus sur chaque élément — un sous-arbre marqué data-theme="dark" (le lecteur vidéo)
+   prend donc les valeurs sombres. */
+@theme inline {
+  /* Fonds et surfaces */
+  --color-page: var(--atelier-bg);
+  --color-sidebar: var(--atelier-sidebar);
+  --color-surface: var(--atelier-surface);
+  --color-surface-2: var(--atelier-surface-2); /* survol, menus, vignettes */
+  --color-surface-3: var(--atelier-surface-3); /* sélection */
+  --color-field: var(--atelier-field); /* champs de saisie */
 
-  /* Gris de l'interface teintés de cyan (text-muted : #8db4cc) */
-  --color-neutral-200: #d3eaf6;
-  --color-neutral-300: #b4d3e4;
-  --color-neutral-400: #8db4cc;
-  --color-neutral-500: #6a8fa8;
-  --color-neutral-600: #4d6e86;
+  /* Texte */
+  --color-fg: var(--atelier-text);
+  --color-muted: var(--atelier-muted);
 
-  /* Accent = couleur signature de l'app, structure = cyan commun */
+  /* Traits */
+  --color-edge: var(--atelier-border); /* contour des cartes */
+  --color-edge-soft: var(--atelier-border-soft); /* champs, boutons secondaires */
+  --color-line: var(--atelier-line); /* séparateurs */
+
+  /* Signature */
   --color-brand: var(--atelier-signature);
-  --color-brand-dark: color-mix(in oklab, var(--atelier-signature) 78%, black);
-  --color-brand-light: var(--atelier-signature-light);
-  --color-brand-soft: var(--atelier-signature-soft);
-  --color-neon: var(--atelier-neon);
+  --color-brand-contrast: var(--atelier-signature-contrast);
+  --color-brand-ink: var(--atelier-ink); /* texte / icône en couleur */
+  --color-brand-soft: var(--atelier-signature-soft); /* actif, tag */
+  --color-brand-faint: var(--atelier-signature-faint); /* survol */
+}
 
+@theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Outfit Variable', 'Inter Variable', ui-sans-serif, sans-serif;
 
   --spacing-sidebar: 11.5rem;
 }
+
+/* `dark:` suit le marqueur de thème de la suite, pas la préférence du système. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *));
 
 /* App Mac : `desktop:` cible l'interface affichée dans la fenêtre native */
 @custom-variant desktop (&:where(.is-desktop, .is-desktop *));
@@ -48,48 +56,47 @@
     min-height: 100%;
   }
   body {
-    @apply bg-ink-950 font-sans text-fg antialiased;
-    /* Léger halo cyan en haut de page */
-    background-image: radial-gradient(
-      120% 60% at 50% -10%,
-      color-mix(in oklab, var(--atelier-neon) 10%, transparent),
-      transparent 60%
-    );
-    background-repeat: no-repeat;
+    @apply bg-page font-sans text-fg antialiased;
+    /* Fine grille + lueur en haut, dans la couleur de l'app */
+    background-image: var(--atelier-backdrop);
+    background-attachment: fixed;
   }
   ::selection {
-    @apply bg-brand/70 text-white;
+    @apply bg-brand/70 text-brand-contrast;
   }
 }
 
-/* Cartes, panneaux, barre latérale : verre + halo cyan (valent `none` hors thème sombre). */
-@utility neon-panel {
-  background-image: var(--atelier-glass);
+/* Cartes, panneaux, champ de recherche : halo de la signature. */
+@utility halo {
   box-shadow: var(--atelier-glow);
 }
 
-/* Modales, menus, éléments actifs. */
-@utility neon-panel-strong {
-  background-image: var(--atelier-glass);
+/* Modales, menus, éléments survolés. */
+@utility halo-strong {
   box-shadow: var(--atelier-glow-strong);
 }
 
-/* Titres de page, avec parcimonie. */
-@utility neon-title {
+/* Titres de page. */
+@utility halo-text {
   text-shadow: var(--atelier-text-glow);
 }
 
-/* Bouton principal : fond signature, halo au survol / focus. */
-@utility btn-signature {
-  background-color: var(--atelier-signature);
-  color: var(--atelier-signature-contrast);
-  &:hover:not(:disabled),
-  &:focus-visible {
-    background-color: color-mix(in oklab, var(--atelier-signature) 88%, white);
-    box-shadow: var(--atelier-signature-glow);
+/* Champs : bordure signature + anneau au focus. */
+@utility focus-field {
+  &:focus,
+  &:focus-within {
+    border-color: var(--atelier-signature);
+    box-shadow: var(--atelier-focus);
+  }
+}
+
+/* Compléments du bouton principal du kit (.atelier-btn-primary) : survol et focus. */
+@utility btn-primary-states {
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
   }
   &:focus-visible {
-    outline: 2px solid var(--atelier-neon);
+    outline: 2px solid var(--atelier-signature);
     outline-offset: 2px;
   }
 }
