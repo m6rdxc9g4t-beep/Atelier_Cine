@@ -56,9 +56,10 @@
     min-height: 100%;
   }
   body {
-    @apply bg-page font-sans text-fg antialiased;
-    /* Fine grille + lueur en haut, dans la couleur de l'app */
-    background-image: var(--atelier-backdrop);
+    @apply font-sans text-fg antialiased;
+    /* Fine grille + lueur en haut, dans la couleur de l'app. --atelier-backdrop contient
+       des tailles de motif : il ne s'emploie que dans le raccourci `background`. */
+    background: var(--atelier-backdrop), var(--atelier-bg);
     background-attachment: fixed;
   }
   ::selection {
