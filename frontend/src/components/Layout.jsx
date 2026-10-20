@@ -22,7 +22,7 @@ export default function Layout() {
 
       {/* En-tête flottant (logo mobile + profil) */}
       <header className={`pointer-events-none fixed top-0 right-0 left-0 z-30 flex items-center justify-between px-5 py-3 transition-colors duration-300 md:left-sidebar md:justify-end md:px-8 md:py-4 ${
-          scrolled ? 'bg-ink-950/85 backdrop-blur-md' : 'bg-gradient-to-b from-black/50 to-transparent'
+          scrolled ? 'border-b border-line bg-ink-950/85 backdrop-blur-md neon-panel' : 'bg-gradient-to-b from-ink-950/60 to-transparent'
         }`}>
         <span className="pointer-events-auto md:hidden">
           <Logo />

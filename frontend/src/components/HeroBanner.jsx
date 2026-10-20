@@ -47,7 +47,7 @@ export default function HeroBanner({ item, onMoreInfo }) {
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
             to={`/watch/${item.id}`}
-            className="inline-flex items-center gap-3 rounded-md bg-white px-7 py-3.5 text-lg font-semibold text-black transition hover:bg-white/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-3 btn-signature rounded-md px-7 py-3.5 text-lg font-semibold transition"
           >
             <Play className="size-6" fill="currentColor" />
             Regarder
@@ -55,7 +55,7 @@ export default function HeroBanner({ item, onMoreInfo }) {
           <button
             type="button"
             onClick={() => onMoreInfo?.(item)}
-            className="inline-flex items-center gap-3 rounded-md border border-white/20 bg-neutral-500/40 px-7 py-3.5 text-lg font-semibold text-white backdrop-blur-sm transition hover:bg-neutral-500/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-3 rounded-md border border-neon/30 bg-ink-850/60 px-7 py-3.5 text-lg font-semibold text-fg backdrop-blur-sm transition hover:border-neon/60 hover:bg-ink-800/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon"
           >
             <Info className="size-6" />
             Plus d'infos

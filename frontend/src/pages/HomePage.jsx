@@ -17,19 +17,19 @@ export default function HomePage() {
     return (
       <div className="grid min-h-[80vh] place-items-center px-6 text-center">
         <div className="max-w-lg">
-          <h1 className="font-display text-4xl font-semibold">Ta médiathèque est vide</h1>
+          <h1 className="font-display text-4xl font-semibold neon-title">Ta médiathèque est vide</h1>
           <p className="mt-4 text-neutral-400">
             Aucun film ni série n'a été trouvé dans les dossiers configurés. Indique où se trouvent tes vidéos dans{' '}
             <code className="rounded bg-white/10 px-1.5 py-0.5 text-sm">backend/.env</code>, puis relance un scan.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link to="/settings#mediatheque" className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 font-semibold text-black hover:bg-white/85">
+            <Link to="/settings#mediatheque" className="inline-flex items-center gap-2 btn-signature rounded-md px-5 py-3 font-semibold transition">
               <FolderSearch className="size-5" /> Configurer mes dossiers
             </Link>
             <button
               type="button"
               onClick={() => setDemoPref('auto')}
-              className="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-md border border-neon/30 bg-neon/5 px-5 py-3 font-semibold hover:bg-neon/10"
             >
               <Sparkles className="size-5" /> Voir la démo
             </button>

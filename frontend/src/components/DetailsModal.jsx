@@ -25,7 +25,7 @@ export default function DetailsModal({ item, onClose }) {
       ref={ref}
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(48rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-ink-850 p-0 text-white shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      className="m-auto w-[min(48rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-line bg-ink-850 p-0 text-fg shadow-2xl neon-panel-strong backdrop:bg-black/70 backdrop:backdrop-blur-sm"
     >
       {item && (
         <article>
@@ -53,7 +53,7 @@ export default function DetailsModal({ item, onClose }) {
               <Link
                 to={`/watch/${item.id}`}
                 onClick={onClose}
-                className="inline-flex items-center gap-2 rounded-md bg-white px-6 py-2.5 font-semibold text-black hover:bg-white/85"
+                className="inline-flex items-center gap-2 btn-signature rounded-md px-6 py-2.5 font-semibold transition"
               >
                 <Play className="size-5" fill="currentColor" /> Regarder
               </Link>

@@ -11,7 +11,7 @@ const KINDS = [
 function DirRow({ path, status, onRemove }) {
   const ok = status?.readable;
   return (
-    <li className="flex items-center gap-3 rounded-md bg-black/25 px-3 py-2">
+    <li className="flex items-center gap-3 rounded-md border border-line/60 bg-ink-950/50 px-3 py-2">
       {status ? (
         ok ? (
           <CheckCircle2 className="size-4 shrink-0 text-emerald-400" aria-label="Accessible" />
@@ -50,7 +50,7 @@ function AddDir({ kind, onAdd }) {
           const picked = await desktop.pickFolder(kind.pickTitle);
           if (picked) onAdd(picked);
         }}
-        className="inline-flex items-center gap-2 rounded-md border border-white/15 px-3 py-1.5 text-sm text-neutral-200 hover:border-white/40 hover:text-white"
+        className="inline-flex items-center gap-2 rounded-md border border-neon/25 px-3 py-1.5 text-sm text-neutral-200 hover:border-neon/60 hover:text-white"
       >
         <FolderOpen className="size-4" /> Ajouter un dossier…
       </button>
@@ -71,9 +71,9 @@ function AddDir({ kind, onAdd }) {
         onChange={(e) => setValue(e.target.value)}
         placeholder={kind.key === 'movies' ? '/Volumes/NAS/Films' : '/Volumes/NAS/Series'}
         aria-label={`Nouveau dossier de ${kind.label.toLowerCase()}`}
-        className="min-w-0 flex-1 rounded-md border border-white/10 bg-ink-900 px-3 py-1.5 font-mono text-xs outline-none placeholder:text-neutral-600 focus:border-white/40"
+        className="min-w-0 flex-1 rounded-md border border-line bg-ink-900 px-3 py-1.5 font-mono text-xs outline-none placeholder:text-neutral-600 focus:border-neon"
       />
-      <button type="submit" disabled={!value.trim()} className="inline-flex items-center gap-1 rounded-md border border-white/15 px-3 text-sm hover:border-white/40 disabled:opacity-40">
+      <button type="submit" disabled={!value.trim()} className="inline-flex items-center gap-1 rounded-md border border-neon/25 px-3 text-sm hover:border-neon/60 disabled:opacity-40">
         <Plus className="size-4" /> Ajouter
       </button>
     </form>
@@ -149,7 +149,7 @@ export default function FoldersEditor({ onSaved }) {
           type="button"
           onClick={save}
           disabled={!dirty || state.status === 'saving'}
-          className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 btn-signature rounded-md px-5 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
         >
           {state.status === 'saving' && <Loader2 className="size-4 animate-spin" />}
           Enregistrer et scanner

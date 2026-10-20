@@ -14,7 +14,7 @@ function ColorPicker({ value, onChange }) {
           aria-checked={value === c}
           aria-label={`Couleur ${c}`}
           onClick={() => onChange(c)}
-          className="grid size-7 place-items-center rounded-full ring-offset-2 ring-offset-ink-850 transition hover:scale-110 aria-checked:ring-2 aria-checked:ring-white"
+          className="grid size-7 place-items-center rounded-full ring-offset-2 ring-offset-ink-850 transition hover:scale-110 aria-checked:ring-2 aria-checked:ring-neon"
           style={{ background: c }}
         >
           {value === c && <Check className="size-3.5 text-white" />}
@@ -43,7 +43,7 @@ function ProfileRow({ profile, canDelete }) {
   };
 
   return (
-    <li className="rounded-lg border border-white/5 bg-white/[0.03] p-4">
+    <li className="rounded-lg border border-line bg-white/[0.03] p-4 neon-panel">
       <div className="flex items-center gap-3">
         <Avatar profile={profile} size="lg" />
         <input
@@ -53,7 +53,7 @@ function ProfileRow({ profile, canDelete }) {
           onBlur={() => name.trim() !== profile.name && save({ name })}
           onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
           aria-label="Nom du profil"
-          className="min-w-0 flex-1 rounded-md border border-white/10 bg-ink-900 px-3 py-2 outline-none focus:border-white/40"
+          className="min-w-0 flex-1 rounded-md border border-line bg-ink-900 px-3 py-2 outline-none focus:border-neon"
         />
         {canDelete &&
           (confirm ? (
@@ -61,7 +61,7 @@ function ProfileRow({ profile, canDelete }) {
               <button
                 type="button"
                 onClick={() => remove(profile.id).catch((err) => setError(err.message))}
-                className="rounded-md bg-brand px-3 py-2 text-xs font-semibold hover:bg-brand-dark"
+                className="rounded-md bg-red-600 px-3 py-2 text-xs font-semibold text-white hover:bg-red-700"
               >
                 Supprimer
               </button>
@@ -107,7 +107,7 @@ function AddProfileForm({ onDone, autoFocus }) {
   };
 
   return (
-    <form onSubmit={submit} className="rounded-lg border border-dashed border-white/15 p-4">
+    <form onSubmit={submit} className="rounded-lg border border-dashed border-neon/25 p-4">
       <div className="flex items-center gap-3">
         <Avatar profile={{ name: name || '+', color }} size="lg" />
         <input
@@ -117,12 +117,12 @@ function AddProfileForm({ onDone, autoFocus }) {
           onChange={(e) => (setName(e.target.value), setError(null))}
           placeholder="Prénom du nouveau profil"
           aria-label="Nom du nouveau profil"
-          className="min-w-0 flex-1 rounded-md border border-white/10 bg-ink-900 px-3 py-2 outline-none placeholder:text-neutral-500 focus:border-white/40"
+          className="min-w-0 flex-1 rounded-md border border-line bg-ink-900 px-3 py-2 outline-none placeholder:text-neutral-500 focus:border-neon"
         />
         <button
           type="submit"
           disabled={!name.trim()}
-          className="inline-flex items-center gap-1.5 rounded-md bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-white/85 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 btn-signature rounded-md px-4 py-2 text-sm font-semibold transition disabled:opacity-40"
         >
           <Plus className="size-4" /> Ajouter
         </button>
@@ -151,12 +151,12 @@ export default function ProfilesDialog({ mode, onClose }) {
       ref={ref}
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(34rem,calc(100vw-2rem))] rounded-xl bg-ink-850 p-0 text-white shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      className="m-auto w-[min(34rem,calc(100vw-2rem))] rounded-xl border border-line bg-ink-850 p-0 text-fg shadow-2xl neon-panel-strong backdrop:bg-black/70 backdrop:backdrop-blur-sm"
     >
       {mode && (
         <div className="p-6">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="font-display text-2xl font-semibold">{mode === 'add' ? 'Nouveau profil' : 'Gérer les profils'}</h2>
+            <h2 className="font-display text-2xl font-semibold neon-title">{mode === 'add' ? 'Nouveau profil' : 'Gérer les profils'}</h2>
             <button type="button" onClick={onClose} aria-label="Fermer" className="grid size-9 place-items-center rounded-full hover:bg-white/10">
               <X className="size-5" />
             </button>

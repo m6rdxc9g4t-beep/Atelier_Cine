@@ -25,7 +25,7 @@ export default function ProfileMenu() {
     };
   }, [open]);
 
-  const item = 'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-neutral-200 transition hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline-none';
+  const item = 'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-neutral-200 transition hover:bg-neon/10 focus-visible:bg-neon/10 focus-visible:outline-none';
 
   return (
     <div ref={rootRef} className="relative">
@@ -35,16 +35,16 @@ export default function ProfileMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={active ? `Profil : ${active.name}. Changer de profil` : 'Choisir un profil'}
-        className="group flex items-center gap-2 rounded-full p-1 text-neutral-300 transition hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+        className="group flex items-center gap-2 rounded-full p-1 text-neutral-300 transition hover:text-white focus-visible:outline-2 focus-visible:outline-neon"
       >
-        <Avatar profile={active} className="ring-2 ring-white/15 transition group-hover:ring-white/40" />
+        <Avatar profile={active} className="ring-2 ring-neon/25 transition group-hover:ring-neon/60" />
         <ChevronDown className={`size-5 transition ${open ? 'rotate-180' : 'group-hover:translate-y-0.5'}`} />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute top-full right-0 mt-2 w-64 origin-top-right rounded-xl border border-white/10 bg-ink-850/95 p-2 shadow-2xl shadow-black/60 backdrop-blur-md"
+          className="absolute top-full right-0 mt-2 w-64 origin-top-right rounded-xl border border-line bg-ink-850/95 p-2 shadow-2xl shadow-black/60 backdrop-blur-md neon-panel-strong"
         >
           <p className="px-3 pt-1 pb-2 text-xs font-medium tracking-wide text-neutral-500 uppercase">Qui regarde ?</p>
           {profiles.map((p) => (
@@ -61,7 +61,7 @@ export default function ProfileMenu() {
             >
               <Avatar profile={p} size="sm" />
               <span className="flex-1 truncate">{p.name}</span>
-              {p.id === active?.id && <Check className="size-4 text-white" />}
+              {p.id === active?.id && <Check className="size-4 text-brand-light" />}
             </button>
           ))}
 
@@ -74,7 +74,7 @@ export default function ProfileMenu() {
             </button>
           )}
 
-          <div className="my-2 h-px bg-white/10" />
+          <div className="my-2 h-px bg-line" />
           <button type="button" role="menuitem" onClick={() => (setDialog('manage'), setOpen(false))} className={item}>
             <Pencil className="size-4 text-neutral-400" /> Gérer les profils
           </button>

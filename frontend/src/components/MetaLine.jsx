@@ -2,7 +2,7 @@ import { formatDuration, formatSeasons } from '../lib/format.js';
 
 function Badge({ children }) {
   return (
-    <span className="rounded-md border border-white/40 px-2 py-0.5 text-[0.9em] leading-tight text-white/90">
+    <span className="rounded-md border border-neon/40 px-2 py-0.5 text-[0.9em] leading-tight text-white/90">
       {children}
     </span>
   );

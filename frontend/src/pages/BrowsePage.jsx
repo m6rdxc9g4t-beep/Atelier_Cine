@@ -27,12 +27,12 @@ export default function BrowsePage({ view }) {
     <div className="px-5 pt-24 sm:px-10 lg:px-16">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-4xl font-semibold">{title}</h1>
+          <h1 className="font-display text-4xl font-semibold neon-title">{title}</h1>
           <p className="mt-1 text-sm text-neutral-400">
             {items.length} titre{items.length > 1 ? 's' : ''}
           </p>
         </div>
-        <label className="flex w-full items-center gap-2 rounded-md border border-white/10 bg-ink-850 px-3 py-2 text-sm focus-within:border-white/40 sm:w-72">
+        <label className="flex w-full items-center gap-2 rounded-md border border-line bg-ink-850 px-3 py-2 text-sm neon-panel focus-within:border-neon sm:w-72">
           <Search className="size-4 text-neutral-400" />
           <input
             value={query}

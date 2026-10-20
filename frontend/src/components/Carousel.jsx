@@ -28,12 +28,12 @@ export default function Carousel({ title, children, action }) {
   };
 
   const arrow =
-    'absolute top-0 bottom-0 z-20 hidden w-12 items-center justify-center bg-ink-950/60 text-white opacity-0 transition group-hover/row:opacity-100 hover:bg-ink-950/80 focus-visible:opacity-100 md:flex';
+    'absolute top-0 bottom-0 z-20 hidden w-12 items-center justify-center bg-ink-950/60 text-neon opacity-0 transition group-hover/row:opacity-100 hover:bg-ink-950/80 focus-visible:opacity-100 md:flex';
 
   return (
     <section className="group/row relative" aria-label={title}>
       <div className="mb-3 flex items-baseline justify-between px-5 sm:px-10 lg:px-16">
-        <h2 className="font-display text-xl font-semibold text-white sm:text-2xl">{title}</h2>
+        <h2 className="font-display text-xl font-semibold text-fg sm:text-2xl">{title}</h2>
         {action}
       </div>
 

@@ -20,7 +20,7 @@ function Status({ ok, children }) {
 
 function Panel({ id, title, children, action }) {
   return (
-    <section id={id} className="scroll-mt-24 rounded-xl border border-white/5 bg-ink-850 p-6">
+    <section id={id} className="scroll-mt-24 rounded-xl border border-line bg-ink-850 p-6 neon-panel">
       <div className="mb-4 flex items-center justify-between gap-4">
         <h2 className="font-display text-xl font-semibold">{title}</h2>
         {action}
@@ -69,10 +69,10 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-3xl space-y-6 px-5 pt-24 sm:px-10 lg:px-16">
-      <h1 className="font-display text-4xl font-semibold">Paramètres</h1>
+      <h1 className="font-display text-4xl font-semibold neon-title">Paramètres</h1>
 
       <Panel id="profils" title="Profils" action={
-        <button type="button" onClick={() => setDialog('manage')} className="inline-flex items-center gap-1.5 text-sm text-neutral-300 hover:text-white">
+        <button type="button" onClick={() => setDialog('manage')} className="inline-flex items-center gap-1.5 text-sm text-brand-light hover:text-white">
           <Pencil className="size-4" /> Gérer
         </button>
       }>
@@ -85,13 +85,13 @@ export default function SettingsPage() {
               aria-pressed={p.id === active?.id}
               className="group flex w-20 flex-col items-center gap-2 text-sm text-neutral-400 aria-pressed:text-white"
             >
-              <Avatar profile={p} size="lg" className="ring-offset-2 ring-offset-ink-850 transition group-hover:scale-105 group-aria-pressed:ring-2 group-aria-pressed:ring-white" />
+              <Avatar profile={p} size="lg" className="ring-offset-2 ring-offset-ink-850 transition group-hover:scale-105 group-aria-pressed:ring-2 group-aria-pressed:ring-brand" />
               <span className="w-full truncate">{p.name}</span>
             </button>
           ))}
           {profiles.length < 8 && (
             <button type="button" onClick={() => setDialog('add')} className="flex w-20 flex-col items-center gap-2 text-sm text-neutral-500 hover:text-white">
-              <span className="grid size-14 place-items-center rounded-lg border border-dashed border-white/25 text-2xl">+</span>
+              <span className="grid size-14 place-items-center rounded-lg border border-dashed border-neon/30 text-2xl">+</span>
               Ajouter
             </button>
           )}
@@ -110,12 +110,12 @@ export default function SettingsPage() {
 
         <FoldersEditor onSaved={() => reload()} />
 
-        <div className="mt-6 border-t border-white/5 pt-5">
+        <div className="mt-6 border-t border-line pt-5">
         <button
           type="button"
           onClick={runScan}
           disabled={!apiReachable || scan.state === 'running'}
-          className="inline-flex items-center gap-2 rounded-md border border-white/15 px-4 py-2 text-sm font-semibold transition hover:border-white/40 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-md border border-neon/25 px-4 py-2 text-sm font-semibold transition hover:border-neon/60 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {scan.state === 'running' ? <Loader2 className="size-4 animate-spin" /> : <FolderSearch className="size-4" />}
           Rescanner maintenant
@@ -138,7 +138,7 @@ export default function SettingsPage() {
       </Panel>
 
       <Panel id="demo" title="Catalogue de démonstration">
-        <div role="radiogroup" aria-label="Affichage du catalogue de démonstration" className="inline-flex rounded-lg border border-white/10 bg-black/30 p-1">
+        <div role="radiogroup" aria-label="Affichage du catalogue de démonstration" className="inline-flex rounded-lg border border-line bg-ink-950/60 p-1">
           {DEMO_OPTIONS.map((o) => (
             <button
               key={o.value}
@@ -146,7 +146,7 @@ export default function SettingsPage() {
               role="radio"
               aria-checked={demoPref === o.value}
               onClick={() => setDemoPref(o.value)}
-              className="rounded-md px-4 py-1.5 text-sm text-neutral-400 transition hover:text-white aria-checked:bg-white aria-checked:font-semibold aria-checked:text-black"
+              className="rounded-md px-4 py-1.5 text-sm text-neutral-400 transition hover:text-white aria-checked:bg-brand aria-checked:font-semibold aria-checked:text-[var(--atelier-signature-contrast)]"
             >
               {o.label}
             </button>

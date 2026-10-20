@@ -13,7 +13,7 @@ export default function MediaCard({ item, onSelect, className = 'w-36 sm:w-40 xl
       type="button"
       onClick={() => onSelect?.(item)}
       className={`group relative shrink-0 snap-start overflow-hidden rounded-lg bg-ink-800 text-left shadow-lg shadow-black/40 outline-none
-        ring-white transition duration-300 hover:z-10 hover:scale-[1.04] hover:ring-[3px] focus-visible:scale-[1.04] focus-visible:ring-[3px] ${className}`}
+        ring-neon transition duration-300 hover:shadow-[var(--atelier-glow-strong)] focus-visible:shadow-[var(--atelier-glow-strong)] hover:z-10 hover:scale-[1.04] hover:ring-[3px] focus-visible:scale-[1.04] focus-visible:ring-[3px] ${className}`}
       aria-label={`${item.title}${item.year ? ` (${item.year})` : ''}`}
     >
       <div className="aspect-[2/3] w-full">

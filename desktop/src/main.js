@@ -81,7 +81,7 @@ function createWindow() {
     minHeight: 600,
     show: false,
     title: 'Atelier_Ciné',
-    backgroundColor: '#0f1015',
+    backgroundColor: '#06111f',
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 18, y: 18 },
     webPreferences: {
