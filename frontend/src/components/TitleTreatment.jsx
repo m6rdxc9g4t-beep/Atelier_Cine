@@ -1,18 +1,18 @@
 /**
- * Titre "logo" de la bannière. Avec `slashedO`, le premier O est barré (Ø) comme sur
+ * Titre de la bannière, posé sur l'image. Avec `slashedO`, le premier O est barré (Ø) comme sur
  * la maquette d'ORBIT ; le texte reste lisible par les lecteurs d'écran.
- * La taille s'adapte à la longueur du titre.
+ * Même police que l'interface (Inter 600) ; la taille s'adapte à la longueur du titre.
  */
 export default function TitleTreatment({ title, slashedO = false, className = '' }) {
   const idx = slashedO ? title.toUpperCase().indexOf('O') : -1;
   const size =
     title.length <= 8
-      ? 'text-[clamp(3.5rem,9vw,8.5rem)]'
+      ? 'text-[clamp(2.75rem,6vw,4.75rem)]'
       : title.length <= 16
-        ? 'text-[clamp(2.75rem,6.5vw,6rem)]'
-        : 'text-[clamp(2.25rem,4.5vw,4.25rem)]';
+        ? 'text-[clamp(2.25rem,4.4vw,3.5rem)]'
+        : 'text-[clamp(1.75rem,3.2vw,2.5rem)]';
   return (
-    <h1 aria-label={title} className={`max-w-[18ch] font-display font-semibold tracking-[0.06em] text-balance uppercase ${size} ${className}`}>
+    <h2 aria-label={title} className={`max-w-[18ch] leading-none font-semibold tracking-[-0.025em] text-balance ${size} ${className}`}>
       <span aria-hidden>
         {[...title].map((ch, i) =>
           i === idx ? (
@@ -25,6 +25,6 @@ export default function TitleTreatment({ title, slashedO = false, className = ''
           ),
         )}
       </span>
-    </h1>
+    </h2>
   );
 }

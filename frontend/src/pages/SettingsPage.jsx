@@ -1,20 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { CheckCircle2, FolderSearch, Loader2, Monitor, Moon, Pencil, RefreshCw, Sun, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleAlert, FolderSearch, Loader2, Monitor, Moon, Pencil, Plus, RefreshCw, Sun, XCircle } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { useLibrary } from '../hooks/useLibrary.jsx';
 import { useProfiles } from '../hooks/useProfiles.jsx';
 import { useTheme } from '../hooks/useTheme.jsx';
 import { THEME_OPTIONS } from '../lib/theme.js';
+import TopBar from '../components/TopBar.jsx';
 import Avatar from '../components/Avatar.jsx';
 import ProfilesDialog from '../components/ProfilesDialog.jsx';
 import FoldersEditor from '../components/FoldersEditor.jsx';
 import { desktop } from '../lib/desktop.js';
 
-function Status({ ok, children }) {
+/**
+ * État d'un service. Nominal = neutre (règle du témoin muet) ; « down » = rouge ; « off » = gris (facultatif absent).
+ */
+function Status({ tone = 'ok', children }) {
+  const Icon = tone === 'ok' ? CheckCircle2 : tone === 'down' ? CircleAlert : XCircle;
+  const color = tone === 'down' ? 'text-down' : 'text-muted';
   return (
-    <span className={`inline-flex items-center gap-1.5 text-sm ${ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted'}`}>
-      {ok ? <CheckCircle2 className="size-4" /> : <XCircle className="size-4" />}
+    <span className={`inline-flex items-center gap-1.5 text-sm ${color} ${tone === 'down' ? 'font-medium' : ''}`}>
+      <Icon aria-hidden className={`size-4 shrink-0 ${tone === 'down' ? '' : 'text-faint'}`} strokeWidth={1.75} />
       {children}
     </span>
   );
@@ -22,14 +28,20 @@ function Status({ ok, children }) {
 
 function Panel({ id, title, children, action }) {
   return (
-    <section id={id} className="scroll-mt-24 rounded-xl atelier-card p-6">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="font-display text-xl font-semibold">{title}</h2>
+    <section id={id} aria-labelledby={`${id}-titre`} className="scroll-mt-16">
+      <div className="mb-2.5 flex h-[30px] items-center justify-between gap-4">
+        <h2 id={`${id}-titre`} className="text-lg font-semibold">
+          {title}
+        </h2>
         {action}
       </div>
-      {children}
+      <div className="atelier-card p-4">{children}</div>
     </section>
   );
+}
+
+function Hint({ children, className = '' }) {
+  return <p className={`text-sm text-muted ${className}`}>{children}</p>;
 }
 
 const DEMO_OPTIONS = [
@@ -73,139 +85,153 @@ export default function SettingsPage() {
   const counts = hasReal && !isDemo ? `${plural(library.movies.length, 'film')} · ${plural(library.shows.length, 'série')}` : null;
 
   return (
-    <div className="max-w-3xl space-y-6 px-5 pt-24 sm:px-10 lg:px-16">
-      <h1 className="font-display text-4xl font-semibold halo-text">Paramètres</h1>
+    <>
+      <TopBar title="Paramètres" />
 
-      <Panel id="profils" title="Profils" action={
-        <button type="button" onClick={() => setDialog('manage')} className="inline-flex items-center gap-1.5 text-sm text-brand-ink hover:text-fg">
-          <Pencil className="size-4" /> Gérer
-        </button>
-      }>
-        <div className="flex flex-wrap gap-4">
-          {profiles.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => setActiveId(p.id)}
-              aria-pressed={p.id === active?.id}
-              className="group flex w-20 flex-col items-center gap-2 text-sm text-muted aria-pressed:text-fg"
-            >
-              <Avatar profile={p} size="lg" className="ring-offset-2 ring-offset-surface transition group-hover:scale-105 group-aria-pressed:ring-2 group-aria-pressed:ring-brand" />
-              <span className="w-full truncate">{p.name}</span>
+      <div className="max-w-[720px] space-y-7 px-4 pt-5 pb-10 md:px-5">
+        <Panel
+          id="profils"
+          title="Profils"
+          action={
+            <button type="button" onClick={() => setDialog('manage')} className="btn btn-ghost">
+              <Pencil aria-hidden /> Gérer
             </button>
-          ))}
-          {profiles.length < 8 && (
-            <button type="button" onClick={() => setDialog('add')} className="flex w-20 flex-col items-center gap-2 text-sm text-muted/80 hover:text-fg">
-              <span className="grid size-14 place-items-center rounded-lg border border-dashed border-edge-soft text-2xl">+</span>
-              Ajouter
+          }
+        >
+          <div className="flex flex-wrap gap-3">
+            {profiles.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActiveId(p.id)}
+                aria-pressed={p.id === active?.id}
+                className="group flex w-[72px] flex-col items-center gap-2 rounded-md py-1.5 text-sm text-muted transition-colors hover:text-fg aria-pressed:font-medium aria-pressed:text-fg"
+              >
+                <Avatar
+                  profile={p}
+                  size="lg"
+                  className="ring-offset-2 ring-offset-surface group-aria-pressed:ring-2 group-aria-pressed:ring-brand"
+                />
+                <span className="w-full truncate text-center">{p.name}</span>
+              </button>
+            ))}
+            {profiles.length < 8 && (
+              <button
+                type="button"
+                onClick={() => setDialog('add')}
+                className="group flex w-[72px] flex-col items-center gap-2 rounded-md py-1.5 text-sm text-muted transition-colors hover:text-fg"
+              >
+                <span className="grid size-12 place-items-center rounded-full border border-dashed border-edge-soft text-faint transition-colors group-hover:border-faint group-hover:text-fg">
+                  <Plus aria-hidden className="size-5" strokeWidth={1.75} />
+                </span>
+                Ajouter
+              </button>
+            )}
+          </div>
+          {profilesMode === 'local' && (
+            <Hint className="mt-3 border-t border-line pt-3">Backend injoignable : profils enregistrés dans ce navigateur uniquement.</Hint>
+          )}
+        </Panel>
+
+        <Panel id="apparence" title="Apparence">
+          <div role="radiogroup" aria-label="Thème de l’interface" className="seg">
+            {THEME_OPTIONS.map((o) => {
+              const Icon = THEME_ICONS[o.value];
+              return (
+                <button key={o.value} type="button" role="radio" aria-checked={themePref === o.value} onClick={() => setTheme(o.value)}>
+                  <Icon aria-hidden />
+                  {o.label}
+                </button>
+              );
+            })}
+          </div>
+          <Hint className="mt-3 text-fg">{THEME_OPTIONS.find((o) => o.value === themePref)?.hint}</Hint>
+          {themePref === 'system' && <Hint className="mt-1">Actuellement : thème {theme === 'dark' ? 'sombre' : 'clair'}.</Hint>}
+          <Hint className="mt-1">Le lecteur vidéo reste toujours sur fond noir.</Hint>
+        </Panel>
+
+        <Panel id="mediatheque" title="Médiathèque">
+          <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <Status tone={apiReachable ? 'ok' : 'down'}>
+              {apiReachable
+                ? desktop
+                  ? 'Serveur intégré actif'
+                  : 'API connectée'
+                : desktop
+                  ? 'Serveur intégré injoignable — relance l’app'
+                  : 'API injoignable — lance « npm run dev » à la racine du projet'}
+            </Status>
+            {counts && <span className="text-sm text-muted tabular-nums">{counts} indexés</span>}
+            {scannedAt && (
+              <span className="text-sm text-faint tabular-nums">Dernier scan : {new Date(scannedAt).toLocaleString('fr-FR')}</span>
+            )}
+          </div>
+
+          <FoldersEditor onSaved={() => reload()} />
+
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line pt-4">
+            <button type="button" onClick={runScan} disabled={!apiReachable || scan.state === 'running'} className="btn">
+              {scan.state === 'running' ? <Loader2 aria-hidden className="animate-spin" /> : <FolderSearch aria-hidden />}
+              Rescanner maintenant
+            </button>
+            <span className="text-xs text-faint">Après avoir ajouté des fichiers dans tes dossiers.</span>
+          </div>
+          {scan.state === 'done' && (
+            <p className="mt-3 text-sm text-muted tabular-nums" role="status">
+              Scan terminé en {scan.res.durationMs} ms — {scan.res.counts.movies} films, {scan.res.counts.shows} séries, {scan.res.counts.episodes} épisodes.
+            </p>
+          )}
+          {scan.state === 'error' && (
+            <p className="mt-3 text-sm text-down" role="alert">
+              {scan.message}
+            </p>
+          )}
+
+          {desktop && (
+            <button type="button" onClick={() => desktop.openDataFolder()} className="mt-3 text-xs text-muted underline hover:text-fg">
+              Ouvrir le dossier des données de l'app dans le Finder
             </button>
           )}
-        </div>
-        {profilesMode === 'local' && (
-          <p className="mt-4 text-xs text-muted/80">Backend injoignable : profils enregistrés dans ce navigateur uniquement.</p>
-        )}
-      </Panel>
+        </Panel>
 
-      <Panel id="apparence" title="Apparence">
-        <div role="radiogroup" aria-label="Thème de l’interface" className="inline-flex rounded-lg border border-edge-soft bg-field p-1">
-          {THEME_OPTIONS.map((o) => {
-            const Icon = THEME_ICONS[o.value];
-            return (
-              <button
-                key={o.value}
-                type="button"
-                role="radio"
-                aria-checked={themePref === o.value}
-                onClick={() => setTheme(o.value)}
-                className="inline-flex items-center gap-2 rounded-md px-4 py-1.5 text-sm text-muted transition hover:text-fg aria-checked:bg-brand-soft aria-checked:font-semibold aria-checked:text-brand-ink"
-              >
-                <Icon className="size-4" aria-hidden />
+        <Panel id="demo" title="Catalogue de démonstration">
+          <div role="radiogroup" aria-label="Affichage du catalogue de démonstration" className="seg">
+            {DEMO_OPTIONS.map((o) => (
+              <button key={o.value} type="button" role="radio" aria-checked={demoPref === o.value} onClick={() => setDemoPref(o.value)}>
                 {o.label}
               </button>
-            );
-          })}
-        </div>
-        <p className="mt-3 text-sm text-muted">{THEME_OPTIONS.find((o) => o.value === themePref)?.hint}</p>
-        {themePref === 'system' && (
-          <p className="mt-1 text-sm text-muted/80">Actuellement : thème {theme === 'dark' ? 'sombre' : 'clair'}.</p>
-        )}
-        <p className="mt-1 text-sm text-muted/80">Le lecteur vidéo reste toujours sur fond noir.</p>
-      </Panel>
+            ))}
+          </div>
+          <Hint className="mt-3 text-fg">{DEMO_OPTIONS.find((o) => o.value === demoPref)?.hint}</Hint>
+          <Hint className="mt-1">
+            {isDemo
+              ? 'Actuellement : catalogue de démonstration affiché (la lecture joue une bande-annonce d’exemple).'
+              : 'Actuellement : ta médiathèque est affichée.'}
+          </Hint>
+        </Panel>
 
-      <Panel id="mediatheque" title="Médiathèque">
-        <div className="mb-4 flex flex-wrap gap-x-6 gap-y-2">
-          <Status ok={apiReachable}>{apiReachable ? (desktop ? 'Serveur intégré actif' : 'API connectée') : desktop ? 'Serveur intégré injoignable — relance l’app' : 'API injoignable — lance « npm run dev » à la racine du projet'}</Status>
-          {counts && <span className="text-sm text-muted">{counts} indexés</span>}
-          {scannedAt && <span className="text-sm text-muted/80">Dernier scan : {new Date(scannedAt).toLocaleString('fr-FR')}</span>}
-        </div>
-
-        <FoldersEditor onSaved={() => reload()} />
-
-        <div className="mt-6 border-t border-line pt-5">
-        <button
-          type="button"
-          onClick={runScan}
-          disabled={!apiReachable || scan.state === 'running'}
-          className="inline-flex items-center gap-2 rounded-md border border-edge-soft px-4 py-2 text-sm font-semibold transition hover:border-edge disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {scan.state === 'running' ? <Loader2 className="size-4 animate-spin" /> : <FolderSearch className="size-4" />}
-          Rescanner maintenant
-        </button>
-        <span className="ml-3 text-xs text-muted/80">Après avoir ajouté des fichiers dans tes dossiers.</span>
-
-        {scan.state === 'done' && (
-          <p className="mt-3 text-sm text-fg/80">
-            Scan terminé en {scan.res.durationMs} ms — {scan.res.counts.movies} films, {scan.res.counts.shows} séries, {scan.res.counts.episodes} épisodes.
-          </p>
-        )}
-        {scan.state === 'error' && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{scan.message}</p>}
-        </div>
-
-        {desktop && (
-          <button type="button" onClick={() => desktop.openDataFolder()} className="mt-4 text-xs text-muted/80 underline underline-offset-4 hover:text-fg">
-            Ouvrir le dossier des données de l'app dans le Finder
-          </button>
-        )}
-      </Panel>
-
-      <Panel id="demo" title="Catalogue de démonstration">
-        <div role="radiogroup" aria-label="Affichage du catalogue de démonstration" className="inline-flex rounded-lg border border-edge-soft bg-field p-1">
-          {DEMO_OPTIONS.map((o) => (
+        <Panel id="ia" title="IA locale (Ollama)">
+          <div className="flex flex-wrap items-center gap-3">
+            <Status tone={ollama?.available ? 'ok' : 'off'}>
+              {ollama === null
+                ? 'Vérification…'
+                : ollama?.available
+                  ? `Ollama disponible — modèle ${ollama.model}${ollama.modelInstalled ? '' : ' (non installé)'}`
+                  : 'Ollama non détecté'}
+            </Status>
             <button
-              key={o.value}
               type="button"
-              role="radio"
-              aria-checked={demoPref === o.value}
-              onClick={() => setDemoPref(o.value)}
-              className="rounded-md px-4 py-1.5 text-sm text-muted transition hover:text-fg aria-checked:bg-brand-soft aria-checked:font-semibold aria-checked:text-brand-ink"
+              onClick={() => api.ollamaStatus().then(setOllama).catch(() => setOllama(false))}
+              className="btn btn-ghost"
             >
-              {o.label}
+              <RefreshCw aria-hidden /> Revérifier
             </button>
-          ))}
-        </div>
-        <p className="mt-3 text-sm text-muted">{DEMO_OPTIONS.find((o) => o.value === demoPref)?.hint}</p>
-        <p className="mt-1 text-sm text-muted/80">
-          {isDemo ? 'Actuellement : catalogue de démonstration affiché (la lecture joue une bande-annonce d’exemple).' : 'Actuellement : ta médiathèque est affichée.'}
-        </p>
-      </Panel>
+          </div>
+          {ollama?.models?.length > 0 && <p className="mt-3 text-xs text-muted">Modèles installés : {ollama.models.join(', ')}</p>}
+        </Panel>
 
-      <Panel id="ia" title="IA locale (Ollama)">
-        <div className="flex flex-wrap items-center gap-4">
-          <Status ok={ollama?.available}>
-            {ollama?.available ? `Ollama disponible — modèle ${ollama.model}${ollama.modelInstalled ? '' : ' (non installé)'}` : 'Ollama non détecté'}
-          </Status>
-          <button
-            type="button"
-            onClick={() => api.ollamaStatus().then(setOllama).catch(() => setOllama(false))}
-            className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-fg"
-          >
-            <RefreshCw className="size-3.5" /> Revérifier
-          </button>
-        </div>
-        {ollama?.models?.length > 0 && <p className="mt-3 text-xs text-muted/80">Modèles installés : {ollama.models.join(', ')}</p>}
-      </Panel>
-
-      <ProfilesDialog mode={dialog} onClose={() => setDialog(null)} />
-    </div>
+        <ProfilesDialog mode={dialog} onClose={() => setDialog(null)} />
+      </div>
+    </>
   );
 }

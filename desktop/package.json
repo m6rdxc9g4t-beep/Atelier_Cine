@@ -3,7 +3,7 @@
   "productName": "Atelier_Cine",
   "version": "0.3.0",
   "private": true,
-  "description": "Atelier_Ciné — application Mac",
+  "description": "Atelier Ciné — application Mac",
   "author": "François Pichon",
   "main": "dist-electron/main.mjs",
   "scripts": {
@@ -47,12 +47,12 @@
       "darkModeSupport": true,
       "extendInfo": {
         "LSApplicationCategoryType": "public.app-category.entertainment",
-        "NSRemovableVolumesUsageDescription": "Atelier_Ciné lit tes films et séries sur les disques externes.",
-        "NSNetworkVolumesUsageDescription": "Atelier_Ciné lit tes films et séries sur ton NAS.",
-        "NSDocumentsFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
-        "NSDownloadsFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
-        "NSDesktopFolderUsageDescription": "Atelier_Ciné lit les vidéos que tu choisis dans ce dossier.",
-        "CFBundleDisplayName": "Atelier_Ciné"
+        "NSRemovableVolumesUsageDescription": "Atelier Ciné lit tes films et séries sur les disques externes.",
+        "NSNetworkVolumesUsageDescription": "Atelier Ciné lit tes films et séries sur ton NAS.",
+        "NSDocumentsFolderUsageDescription": "Atelier Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "NSDownloadsFolderUsageDescription": "Atelier Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "NSDesktopFolderUsageDescription": "Atelier Ciné lit les vidéos que tu choisis dans ce dossier.",
+        "CFBundleDisplayName": "Atelier Ciné"
       },
       "hardenedRuntime": false
     },

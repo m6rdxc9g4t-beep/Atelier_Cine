@@ -1,14 +1,20 @@
 import { initials } from '../hooks/useProfiles.jsx';
 
-const SIZES = { sm: 'size-8 text-xs rounded-md', md: 'size-11 text-sm rounded-full', lg: 'size-14 text-lg rounded-lg' };
+const SIZES = {
+  xs: 'size-5 text-[10px]',
+  sm: 'size-6 text-[11px]',
+  md: 'size-8 text-xs',
+  lg: 'size-12 text-base',
+};
 
+/** Pastille ronde du profil, dans la couleur choisie pour lui (donnée du profil). */
 export default function Avatar({ profile, size = 'md', className = '' }) {
-  const color = profile?.color ?? '#3a3b42';
+  const color = profile?.color ?? '#5f636c';
   return (
     <span
       aria-hidden
-      className={`grid shrink-0 place-items-center font-display font-semibold text-white ${SIZES[size]} ${className}`}
-      style={{ background: `linear-gradient(140deg, ${color}, color-mix(in srgb, ${color} 45%, #000))` }}
+      className={`grid shrink-0 place-items-center rounded-full leading-none font-semibold text-white ${SIZES[size]} ${className}`}
+      style={{ background: color }}
     >
       {initials(profile?.name)}
     </span>

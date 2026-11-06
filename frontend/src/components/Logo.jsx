@@ -1,10 +1,12 @@
 import { useId, useRef } from 'react';
-import { Play } from 'lucide-react';
-import '../brand/atelier-brand.css';
-import logo from '../brand/logo-atelier-cine.webp';
+import { Clapperboard, X } from 'lucide-react';
 
-/** Marque commune de la suite Atelier (voir src/brand/atelier-brand.css) : un clic ouvre « À propos ». */
-export default function Logo({ className = '' }) {
+/**
+ * Marque commune de la suite Atelier (src/brand/atelier-brand.css, docs/SUITE.md §1.6) :
+ * icône carrée en dégradé de la signature, glyphe Lucide `clapperboard` blanc, puis « Atelier Ciné ».
+ * Un clic ouvre la fenêtre « À propos ». `compact` : icône seule (barre haute du téléphone).
+ */
+export default function Logo({ compact = false, className = '' }) {
   const dialog = useRef(null);
   const titleId = useId();
 
@@ -14,15 +16,18 @@ export default function Logo({ className = '' }) {
         type="button"
         className={`atelier-brand select-none ${className}`}
         aria-haspopup="dialog"
+        aria-label={compact ? 'Atelier Ciné : à propos' : undefined}
         title="À propos d'Atelier Ciné"
         onClick={() => dialog.current?.showModal()}
       >
         <span className="atelier-brand__tile" aria-hidden="true">
-          <Play />
+          <Clapperboard />
         </span>
-        <span className="atelier-brand__name">
-          <span className="atelier-brand__prefix">atelier_</span>Ciné
-        </span>
+        {!compact && (
+          <span className="atelier-brand__name">
+            <span className="atelier-brand__prefix">Atelier </span>Ciné
+          </span>
+        )}
       </button>
 
       <dialog
@@ -33,11 +38,13 @@ export default function Logo({ className = '' }) {
       >
         <div className="atelier-about__panel">
           <button type="button" className="atelier-about__close" aria-label="Fermer" onClick={() => dialog.current?.close()}>
-            ×
+            <X className="size-4" aria-hidden />
           </button>
-          <img className="atelier-about__logo" src={logo} alt="Logo Atelier Ciné" width="576" height="477" />
+          <span className="atelier-about__icon atelier-brand__tile" aria-hidden="true">
+            <Clapperboard />
+          </span>
           <h2 id={titleId} className="atelier-about__name">
-            <span className="atelier-brand__prefix">atelier_</span>Ciné
+            <span className="atelier-brand__prefix">Atelier </span>Ciné
           </h2>
           <p className="atelier-about__tagline">
             Ta médiathèque personnelle façon streaming : tes films et séries, enrichis par une IA locale.

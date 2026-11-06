@@ -1,6 +1,6 @@
-# Atelier_Ciné
+# Atelier Ciné
 
-Médiathèque personnelle façon plateforme de streaming : tes films et séries stockés sur un NAS ou un PC, parcourus dans une interface sombre et immersive, enrichis par une IA locale (Ollama).
+Médiathèque personnelle façon plateforme de streaming : tes films et séries stockés sur un NAS ou un PC, parcourus dans une interface sobre où les affiches mènent, enrichis par une IA locale (Ollama).
 
 > Étape 1 — squelette : arborescence, API de scan du NAS, prototype frontend (Accueil, Films, Séries, Récents, Paramètres, lecteur).
 
@@ -29,7 +29,7 @@ npm run dev                     # API sur :4000 + interface sur http://localhost
 
 Sans backend (ou avec une médiathèque vide), l'interface affiche un **catalogue de démonstration** et un badge « Mode démo » (cliquable, il mène aux Paramètres). En démo, « Regarder » lit une bande-annonce d'exemple (`frontend/public/demo/`). Paramètres → *Catalogue de démonstration* : Automatique / Toujours / Jamais.
 
-**Thème** : Clair / Sombre / Système dans Paramètres → *Apparence* (ou le menu de l'avatar) ; Sombre par défaut.
+**Thème** : Système / Clair / Sombre dans Paramètres → *Apparence* (ou le menu de l'avatar) ; préférence commune à la suite Atelier, « Système » par défaut.
 
 **Profils** : menu de l'avatar en haut à droite (changer, ajouter, gérer). Ils sont enregistrés par l'API dans `backend/data/profiles.json`, donc partagés entre appareils ; le profil actif est mémorisé par appareil.
 
@@ -67,7 +67,7 @@ atelier-cine/
     ├── vite.config.js        # React + Tailwind v4, proxy /api → :4000
     └── src/
         ├── App.jsx           # routes
-        ├── components/       # Sidebar, HeroBanner, SpaceScene, Carousel, MediaCard,
+        ├── components/       # Sidebar, TopBar, HeroBanner, SpaceScene, Carousel, MediaCard,
         │                     # ContinueCard, DetailsModal, MetaLine, TitleTreatment…
         ├── pages/            # HomePage, BrowsePage, SettingsPage, WatchPage
         ├── hooks/useLibrary.jsx  # chargement API + repli démo
@@ -77,12 +77,14 @@ atelier-cine/
 
 ## Charte graphique
 
-Charte « néon monochrome » de la suite Atelier : toute l'interface est dans la couleur signature de Ciné, **magenta #E64980** (fonds, surfaces, traits, textes secondaires, halos), par mélange et transparence.
+Charte v2 « Linear » de la suite Atelier (règles complètes : `Atelier_Deploy/DESIGN.md`, résumé : `docs/SUITE.md` §1 d'Atelier_Projets) : structure **neutre gris froid** commune à toute la suite, en clair comme en sombre ; la couleur signature de Ciné, **magenta #cd3d83**, ne sert qu'à l'accent (bouton principal, sélection, focus, liens, barre de progression, icône de l'app). Plat au repos, traits de 1 px, police Inter 13 px. Les affiches et vignettes (le contenu) portent la couleur ; l'interface autour reste sobre.
 
-- `frontend/src/brand/atelier-brand.css` : fichier commun à la suite, copié tel quel (ne pas l'éditer ici). Il dérive tous les jetons `--atelier-*` de la signature, en sombre et en clair.
-- **Choix du thème** : Paramètres → *Apparence* (ou menu de l'avatar) : Clair / Sombre / Système, **Sombre par défaut** ; mémorisé dans ce navigateur (`localStorage` `atelier-cine-theme`), « Système » suit le réglage de l'appareil. Sur `<html data-atelier-app="cine">` : sombre = `class="dark" data-theme="dark"`, clair = `data-theme="light"` ; un script de `frontend/index.html` l'applique avant le premier rendu (pas de flash), `theme-color` et le fond de la fenêtre Mac suivent. La bannière de l'accueil et le lecteur restent sombres dans les deux thèmes.
-- `frontend/src/index.css` : couleurs Tailwind branchées sur ces jetons (`page`, `sidebar`, `surface`, `surface-2/3`, `field`, `fg`, `muted`, `edge`, `edge-soft`, `line`, `brand`, `brand-ink`, `brand-soft`, `brand-faint`) — pas de couleur d'interface en dur dans les composants.
-- Restent inchangés : affiches et décors générés, logos, couleurs qui portent un sens (statuts, badge « Mode démo », couleurs de profil). Le lecteur vidéo reste noir.
+- `frontend/src/brand/` : copies **verbatim** de `Atelier_Projets/design-system/brand/` (ne pas les éditer ici) — `atelier-brand.css` (jetons `--atelier-*`, marque, fenêtre « À propos »), `atelier-theme.js` (préférence de thème commune), police Inter (`inter-latin*-wght-normal.woff2`, `LICENSE-Inter.txt`).
+- **Marque** : icône carrée en dégradé de la signature avec le glyphe Lucide `clapperboard` blanc, puis « Atelier Ciné ». Un clic ouvre « À propos ». Favicon (`frontend/public/favicon.svg`, `favicon-64.png`, `apple-touch-icon.png`) et icône de l'app Mac (`desktop/resources/icon.png`) = la même icône.
+- **Thème** : Système / Clair / Sombre, dans Paramètres → *Apparence*, le menu de l'avatar ou le pied de la barre latérale. Préférence commune à la suite (`window.atelierTheme`) : cookie `atelier_theme` sur le VPS, sinon `localStorage` `atelier:theme` ; « Système » par défaut. `atelier-theme.js` est inséré tel quel dans `<head>` par `frontend/vite.config.js` (pas de flash) ; l'ancienne clé `atelier-cine-theme` est reprise une fois puis supprimée. Sur `<html data-atelier-app="cine">` : sombre = `class="dark" data-theme="dark"`, clair = `data-theme="light"`. `theme-color` et le fond de la fenêtre Mac suivent. La bannière de l'accueil et le lecteur vidéo restent sombres dans les deux thèmes.
+- **Coquille** : barre latérale de 232 px (marque, navigation, thème), barre haute de 44 px avec le titre de la vue ; sur téléphone, barre d'onglets en bas.
+- `frontend/src/index.css` : couleurs Tailwind branchées sur les jetons (`page`, `sidebar`, `surface`, `surface-2/3`, `field`, `fg`, `muted`, `faint`, `edge`, `edge-soft`, `line`, `brand`, `brand-hover`, `brand-ink`, `brand-soft`, `warn`, `down`), échelle de texte et rayons de la suite, composants `.btn`, `.input`, `.seg`, `.pop`, `.menu-item` — pas de couleur d'interface en dur dans les composants.
+- Seuls les états anormaux sont colorés (`warn` : « Mode démo », dossier introuvable ; `down` : API injoignable, erreurs). Restent inchangés : affiches et décors générés, couleurs de profil.
 
 ## API
 

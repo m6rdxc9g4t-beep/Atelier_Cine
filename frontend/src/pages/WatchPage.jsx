@@ -38,19 +38,20 @@ export default function WatchPage() {
     };
 
   return (
-    <div data-theme="dark" className="fixed inset-0 z-50 bg-black text-white">
-      <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent px-5 py-4 mac-window:pt-11">
+    // Le lecteur reste noir dans les deux thèmes ; seuls la barre du haut et les contrôles natifs se posent dessus.
+    <div data-theme="dark" className="dark fixed inset-0 z-50 bg-black text-fg">
+      <div className="absolute inset-x-0 top-0 z-10 flex h-14 items-center gap-3 bg-gradient-to-b from-black/75 to-transparent px-3 md:px-4 mac-window:pl-20">
         <button
           type="button"
           onClick={back}
-          className="inline-flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 text-sm hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-brand"
+          className="inline-flex h-[30px] items-center gap-1.5 rounded-md px-2 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white"
         >
-          <ArrowLeft className="size-4" /> Retour
+          <ArrowLeft aria-hidden className="size-4" /> Retour
         </button>
         {item && (
-          <p className="truncate font-display text-lg font-semibold">
-            {item.title}
-            {isDemo && <span className="ml-3 align-middle text-xs font-normal tracking-wide text-amber-200/90 uppercase">Démo · bande-annonce</span>}
+          <p className="flex min-w-0 items-baseline gap-2 text-sm font-semibold text-white">
+            <span className="truncate">{item.title}</span>
+            {isDemo && <span className="shrink-0 text-xs font-medium text-warn">Démo · bande-annonce</span>}
           </p>
         )}
       </div>
@@ -58,10 +59,10 @@ export default function WatchPage() {
       {message ? (
         <div className="grid h-full place-items-center px-6 text-center">
           <div className="max-w-md">
-            {failed && <AlertTriangle className="mx-auto mb-4 size-10 text-amber-300" />}
-            <h1 className="font-display text-3xl font-semibold">{message.title}</h1>
-            <p className="mt-3 text-muted">{message.text}</p>
-            <Link to="/settings" className="mt-6 inline-block text-sm text-brand-ink underline underline-offset-4 hover:text-fg">
+            {failed && <AlertTriangle aria-hidden className="mx-auto mb-3 size-6 text-warn" strokeWidth={1.75} />}
+            <h1 className="text-xl font-semibold tracking-[-0.012em]">{message.title}</h1>
+            <p className="mt-2 text-muted">{message.text}</p>
+            <Link to="/settings" className="mt-5 inline-block text-sm font-medium text-brand-ink underline hover:text-fg">
               Ouvrir les Paramètres
             </Link>
           </div>

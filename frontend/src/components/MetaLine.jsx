@@ -2,7 +2,7 @@ import { formatDuration, formatSeasons } from '../lib/format.js';
 
 function Badge({ children }) {
   return (
-    <span className="rounded-md border border-edge-soft px-2 py-0.5 text-[0.9em] leading-tight text-fg/90">
+    <span className="inline-flex h-5 items-center rounded-sm border border-edge-soft px-1.5 text-xs leading-none font-medium text-fg">
       {children}
     </span>
   );
@@ -12,12 +12,12 @@ function Badge({ children }) {
 export default function MetaLine({ item, className = '' }) {
   const duration = item.type === 'show' ? formatSeasons(item) : formatDuration(item.durationMin);
   return (
-    <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 text-fg/80 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-x-3 gap-y-1.5 text-muted tabular-nums ${className}`}>
       {item.year && <span>{item.year}</span>}
       {item.rating && <Badge>{item.rating}</Badge>}
       {duration && <span>{duration}</span>}
       {item.quality?.length > 0 && (
-        <span className="flex gap-2">
+        <span className="flex gap-1.5">
           {item.quality.map((q) => (
             <Badge key={q}>{q}</Badge>
           ))}
