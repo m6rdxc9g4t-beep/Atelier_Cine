@@ -1,52 +1,85 @@
 @import 'tailwindcss';
 
-/* Charte « néon monochrome » de la suite Atelier (voir src/brand/atelier-brand.css) :
-   toute l'interface dérive de la couleur signature de Ciné (magenta #E64980) par mélange
-   et transparence — fonds, surfaces, traits, textes, halos.
-   Thème choisi par l'utilisateur (Paramètres → Apparence, src/lib/theme.js) :
-   sombre = <html class="dark" data-theme="dark"> (défaut), clair = <html data-theme="light">.
+/* Charte v2 « Linear » de la suite Atelier (src/brand/atelier-brand.css, règles : Atelier_Deploy/DESIGN.md) :
+   structure neutre gris froid commune à toute la suite, en clair comme en sombre ; la signature de Ciné
+   (magenta #cd3d83) ne sert qu'à l'accent : bouton principal, sélection, focus, liens, progression, icône.
+   Plat au repos, traits de 1 px, Inter 13 px. Les affiches et vignettes (le contenu) portent la couleur.
 
-   `@theme inline` : les utilitaires pointent directement sur les jetons --atelier-*,
-   résolus sur chaque élément — un sous-arbre marqué data-theme="dark" (le lecteur vidéo)
-   prend donc les valeurs sombres. */
+   Thème : sombre = <html class="dark" data-theme="dark">, clair = <html data-theme="light">,
+   posé avant l'affichage par src/brand/atelier-theme.js (préférence commune à la suite).
+
+   `@theme inline` : les utilitaires pointent directement sur les jetons --atelier-*, résolus sur chaque
+   élément — un sous-arbre marqué data-theme="dark" (bannière, lecteur vidéo) prend les valeurs sombres. */
 @theme inline {
   /* Fonds et surfaces */
   --color-page: var(--atelier-bg);
   --color-sidebar: var(--atelier-sidebar);
   --color-surface: var(--atelier-surface);
-  --color-surface-2: var(--atelier-surface-2); /* survol, menus, vignettes */
-  --color-surface-3: var(--atelier-surface-3); /* sélection */
+  --color-surface-2: var(--atelier-surface-2); /* survol, menus */
+  --color-surface-3: var(--atelier-surface-3); /* élément courant, sélection neutre */
   --color-field: var(--atelier-field); /* champs de saisie */
 
   /* Texte */
   --color-fg: var(--atelier-text);
   --color-muted: var(--atelier-muted);
+  --color-faint: var(--atelier-faint);
 
   /* Traits */
-  --color-edge: var(--atelier-border); /* contour des cartes */
+  --color-edge: var(--atelier-border); /* contour des cartes et panneaux */
   --color-edge-soft: var(--atelier-border-soft); /* champs, boutons secondaires */
   --color-line: var(--atelier-line); /* séparateurs */
 
-  /* Signature */
+  /* Signature (accent) */
   --color-brand: var(--atelier-signature);
   --color-brand-contrast: var(--atelier-signature-contrast);
-  --color-brand-ink: var(--atelier-ink); /* texte / icône en couleur */
-  --color-brand-soft: var(--atelier-signature-soft); /* actif, tag */
-  --color-brand-faint: var(--atelier-signature-faint); /* survol */
+  --color-brand-hover: var(--atelier-signature-hover);
+  --color-brand-ink: var(--atelier-ink); /* texte / icône fine en couleur */
+  --color-brand-soft: var(--atelier-signature-soft); /* sélection */
+  --color-brand-faint: var(--atelier-signature-faint);
+
+  /* États : seulement quand ce n'est pas nominal */
+  --color-warn: var(--atelier-warn);
+  --color-down: var(--atelier-down);
+
+  --font-sans: var(--atelier-font);
+  --font-mono: var(--atelier-font-mono);
 }
 
 @theme {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Outfit Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+  /* Échelle de la suite : méta 11.5 · petit 12 · base 13 · fort 14 · titre 15 · page 20 */
+  --text-meta: 11.5px;
+  --text-meta--line-height: 1.3;
+  --text-xs: 12px;
+  --text-xs--line-height: 1.4;
+  --text-sm: 13px;
+  --text-sm--line-height: 1.45;
+  --text-base: 14px;
+  --text-base--line-height: 1.5;
+  --text-lg: 15px;
+  --text-lg--line-height: 1.45;
+  --text-xl: 20px;
+  --text-xl--line-height: 1.3;
 
-  --spacing-sidebar: 11.5rem;
+  /* Rayons : 5 touches/petites icônes · 7 boutons, champs, affiches · 10 panneaux, dialogues */
+  --radius-sm: 5px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+
+  --spacing-sidebar: 232px;
+  --spacing-topbar: 44px;
+}
+
+/* Téléphone : base 14 px. */
+@media (max-width: 767px) {
+  :root {
+    --text-xs: 12.5px;
+    --text-sm: 14px;
+    --text-base: 15px;
+  }
 }
 
 /* `dark:` suit le marqueur de thème de la suite, pas la préférence du système. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *));
-
-/* `light:` : thème clair choisi sur <html> (même dans un sous-arbre resté sombre, comme la bannière). */
-@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
 
 /* App Mac : `desktop:` cible l'interface affichée dans la fenêtre native */
 @custom-variant desktop (&:where(.is-desktop, .is-desktop *));
@@ -59,49 +92,118 @@
     min-height: 100%;
   }
   body {
-    @apply font-sans text-fg antialiased;
-    /* Fine grille + lueur en haut, dans la couleur de l'app. --atelier-backdrop contient
-       des tailles de motif : il ne s'emploie que dans le raccourci `background`. */
-    background: var(--atelier-backdrop), var(--atelier-bg);
-    background-attachment: fixed;
+    @apply bg-page font-sans text-sm text-fg antialiased;
+    font-feature-settings: 'cv11', 'ss03';
+    -moz-osx-font-smoothing: grayscale;
   }
   ::selection {
-    @apply bg-brand/70 text-brand-contrast;
+    background: color-mix(in oklab, var(--atelier-signature) 30%, transparent);
+    color: var(--atelier-text);
   }
-}
-
-/* Cartes, panneaux, champ de recherche : halo de la signature. */
-@utility halo {
-  box-shadow: var(--atelier-glow);
-}
-
-/* Modales, menus, éléments survolés. */
-@utility halo-strong {
-  box-shadow: var(--atelier-glow-strong);
-}
-
-/* Titres de page. */
-@utility halo-text {
-  text-shadow: var(--atelier-text-glow);
-}
-
-/* Champs : bordure signature + anneau au focus. */
-@utility focus-field {
-  &:focus,
-  &:focus-within {
-    border-color: var(--atelier-signature);
-    box-shadow: var(--atelier-focus);
-  }
-}
-
-/* Compléments du bouton principal du kit (.atelier-btn-primary) : survol et focus. */
-@utility btn-primary-states {
-  &:hover:not(:disabled) {
-    filter: brightness(1.08);
-  }
-  &:focus-visible {
+  :focus-visible {
     outline: 2px solid var(--atelier-signature);
     outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--atelier-border-soft) transparent;
+  }
+  a {
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  dialog::backdrop {
+    background: rgb(10 11 13 / 0.55);
+  }
+  code {
+    @apply rounded-sm bg-surface-2 px-1 py-px font-mono text-[0.9em];
+  }
+}
+
+@layer components {
+  /* Boutons (DESIGN.md « Buttons ») : 30 px, 13 px 500, bord 1 px, coins 7 px. */
+  .btn {
+    @apply inline-flex h-[30px] shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-edge-soft bg-surface px-3 text-sm leading-none font-medium whitespace-nowrap text-fg transition-colors duration-[120ms] select-none;
+    &:hover:not(:disabled) {
+      @apply bg-surface-2;
+    }
+    &:active:not(:disabled) {
+      @apply bg-surface-3;
+    }
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+    & svg {
+      @apply size-4 shrink-0;
+    }
+  }
+  .btn-primary {
+    @apply border-transparent bg-brand text-brand-contrast;
+    &:hover:not(:disabled) {
+      @apply bg-brand-hover;
+    }
+    &:active:not(:disabled) {
+      @apply bg-brand-hover;
+    }
+  }
+  .btn-ghost {
+    @apply border-transparent bg-transparent text-muted;
+    &:hover:not(:disabled) {
+      @apply text-fg;
+    }
+  }
+  .btn-lg {
+    @apply h-[38px] px-4 text-base;
+  }
+  .btn-icon {
+    @apply w-[30px] px-0;
+  }
+
+  /* Champ (DESIGN.md « Inputs ») : bord 1 px, focus = bord signature + halo de 3 px. */
+  .input {
+    @apply h-9 w-full min-w-0 rounded-md border border-edge-soft bg-field px-3 text-base text-fg transition-[border-color,box-shadow] duration-[120ms] outline-none placeholder:text-faint;
+    &:focus,
+    &:focus-within {
+      border-color: var(--atelier-signature);
+      box-shadow: var(--atelier-focus);
+    }
+  }
+
+  /* Contrôle segmenté (thème, catalogue de démonstration). */
+  .seg {
+    @apply inline-flex gap-0.5 rounded-md bg-surface-2 p-0.5;
+    & > button {
+      @apply inline-flex h-6 cursor-pointer items-center gap-1.5 rounded-sm px-2 text-xs leading-none font-medium text-muted transition-colors duration-[120ms];
+      &:hover {
+        @apply text-fg;
+      }
+      &[aria-checked='true'],
+      &[aria-pressed='true'] {
+        @apply bg-surface text-fg;
+        box-shadow:
+          0 1px 2px rgb(0 0 0 / 0.08),
+          0 0 0 1px var(--atelier-line);
+      }
+      & svg {
+        @apply size-3.5;
+      }
+    }
+  }
+
+  /* Menu flottant et dialogue : seules surfaces qui ont droit à une ombre. */
+  .pop {
+    @apply rounded-lg border border-edge bg-surface;
+    box-shadow: var(--atelier-glow-strong);
+  }
+  .menu-item {
+    @apply flex h-[30px] w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-left text-sm text-fg transition-colors duration-[120ms] outline-none;
+    &:hover,
+    &:focus-visible {
+      @apply bg-surface-2;
+    }
+    & > svg {
+      @apply size-4 shrink-0 text-faint;
+    }
   }
 }
 
@@ -110,11 +212,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-}
-
-/* Masque doux sur les bords des carrousels */
-@utility edge-fade {
-  mask-image: linear-gradient(to right, black 0, black calc(100% - 4rem), transparent 100%);
 }
 
 /* Barre de titre invisible de l'app Mac : on peut déplacer la fenêtre par le haut,
@@ -126,4 +223,14 @@
 .is-desktop :is(button, a, input, select, textarea, video, [role='menu'], dialog) {
   -webkit-app-region: no-drag;
   app-region: no-drag;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }

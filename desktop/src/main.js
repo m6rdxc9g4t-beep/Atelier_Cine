@@ -18,9 +18,9 @@ const PREFERRED_PORT = 47321; // port fixe : le navigateur intégré garde ses p
 // ---------------------------------------------------------------------------
 // Noms internes en ASCII (« Atelier_Cine ») : un « é » dans les noms du paquet .app fait
 // planter Electron au démarrage sur macOS (formes Unicode composée/décomposée différentes).
-// Le nom affiché reste « Atelier_Ciné » (titre de fenêtre, À propos, Dock via CFBundleDisplayName).
+// Le nom affiché est « Atelier Ciné » (marque de la suite) (titre de fenêtre, À propos, Dock via CFBundleDisplayName).
 app.setPath('userData', path.join(app.getPath('appData'), 'Atelier_Cine')); // explicite, quel que soit le lanceur
-app.setAboutPanelOptions({ applicationName: 'Atelier_Ciné', applicationVersion: app.getVersion(), copyright: '© 2026 François Pichon' });
+app.setAboutPanelOptions({ applicationName: 'Atelier Ciné', applicationVersion: app.getVersion(), copyright: '© 2026 François Pichon' });
 const userData = app.getPath('userData');
 const envFile = path.join(userData, 'atelier-cine.env');
 process.env.ATELIER_RUNTIME = 'desktop';
@@ -32,20 +32,20 @@ process.env.ATELIER_FRONTEND_DIST = app.isPackaged
 if (existsSync(envFile)) process.loadEnvFile(envFile); // réglages avancés optionnels (Ollama, profondeur de scan…)
 
 // ---------------------------------------------------------------------------
-// Thème de la fenêtre. La préférence vit dans l'interface (localStorage « atelier-cine-theme ») ;
-// l'interface la recopie ici (theme.json) pour que la fenêtre s'ouvre déjà dans la bonne couleur.
-// Défaut : Sombre, comme l'interface.
+// Thème de la fenêtre. La préférence vit dans l'interface (préférence commune à la suite,
+// frontend/src/brand/atelier-theme.js : localStorage « atelier:theme ») ; l'interface la recopie ici
+// (theme.json) pour que la fenêtre s'ouvre déjà dans la bonne couleur. Défaut : Système, comme l'interface.
 // ---------------------------------------------------------------------------
 const themeFile = path.join(userData, 'theme.json');
-const WINDOW_BG = { dark: '#120b10', light: '#fcf3f6' }; // ≈ --atelier-bg de Ciné dans chaque thème
+const WINDOW_BG = { dark: '#0f1012', light: '#fbfbfc' }; // = --atelier-bg (charte v2) dans chaque thème
 const isThemePreference = (v) => v === 'light' || v === 'dark' || v === 'system';
 
 function readThemePreference() {
   try {
     const { preference } = JSON.parse(readFileSync(themeFile, 'utf8'));
-    return isThemePreference(preference) ? preference : 'dark';
+    return isThemePreference(preference) ? preference : 'system';
   } catch {
-    return 'dark';
+    return 'system';
   }
 }
 
@@ -95,7 +95,7 @@ async function boot() {
   try {
     ({ server, url: baseUrl } = await startBackend());
   } catch (err) {
-    dialog.showErrorBox('Atelier_Ciné ne peut pas démarrer', `Le serveur interne n'a pas pu se lancer :\n${err.message}`);
+    dialog.showErrorBox('Atelier Ciné ne peut pas démarrer', `Le serveur interne n'a pas pu se lancer :\n${err.message}`);
     app.quit();
     return;
   }
@@ -116,8 +116,8 @@ function createWindow() {
     minWidth: 960,
     minHeight: 600,
     show: false,
-    title: 'Atelier_Ciné',
-    backgroundColor: windowBackground(), // ≈ --atelier-bg de Ciné dans le thème choisi : pas de flash au démarrage
+    title: 'Atelier Ciné',
+    backgroundColor: windowBackground(), // = --atelier-bg dans le thème choisi : pas de flash au démarrage
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 18, y: 18 },
     webPreferences: {
@@ -169,19 +169,19 @@ function buildMenu() {
     ...(isMac
       ? [
           {
-            label: 'Atelier_Ciné',
+            label: 'Atelier Ciné',
             submenu: [
-              { role: 'about', label: 'À propos d’Atelier_Ciné' },
+              { role: 'about', label: 'À propos d’Atelier Ciné' },
               { type: 'separator' },
               { label: 'Réglages…', accelerator: 'Cmd+,', click: () => navigate('/settings') },
               { type: 'separator' },
               { role: 'services', label: 'Services' },
               { type: 'separator' },
-              { role: 'hide', label: 'Masquer Atelier_Ciné' },
+              { role: 'hide', label: 'Masquer Atelier Ciné' },
               { role: 'hideOthers', label: 'Masquer les autres' },
               { role: 'unhide', label: 'Tout afficher' },
               { type: 'separator' },
-              { role: 'quit', label: 'Quitter Atelier_Ciné' },
+              { role: 'quit', label: 'Quitter Atelier Ciné' },
             ],
           },
         ]

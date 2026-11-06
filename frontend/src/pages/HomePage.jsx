@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FolderSearch, Sparkles } from 'lucide-react';
+import { Film, FolderSearch, Sparkles } from 'lucide-react';
+import TopBar from '../components/TopBar.jsx';
 import HeroBanner from '../components/HeroBanner.jsx';
 import Carousel from '../components/Carousel.jsx';
 import ContinueCard from '../components/ContinueCard.jsx';
@@ -9,44 +10,59 @@ import DetailsModal from '../components/DetailsModal.jsx';
 import { useLibrary } from '../hooks/useLibrary.jsx';
 
 export default function HomePage() {
-  const { featured, continueWatching, library, setDemoPref } = useLibrary();
+  const { featured, continueWatching, library, setDemoPref, status } = useLibrary();
   const [selected, setSelected] = useState(null);
+
+  // Premier chargement : la barre seule, le contenu arrive (évite d'afficher « vide » une fraction de seconde).
+  if (!featured && status === 'loading') {
+    return (
+      <>
+        <TopBar title="Accueil" />
+        <div className="p-4 md:p-5" aria-busy="true">
+          <div className="h-[clamp(26rem,62vh,36rem)] animate-pulse rounded-lg bg-surface-2" />
+        </div>
+      </>
+    );
+  }
 
   // Démo désactivée et médiathèque vide : on guide vers la configuration.
   if (!featured) {
     return (
-      <div className="grid min-h-[80vh] place-items-center px-6 text-center">
-        <div className="max-w-lg">
-          <h1 className="font-display text-4xl font-semibold halo-text">Ta médiathèque est vide</h1>
-          <p className="mt-4 text-muted">
-            Aucun film ni série n'a été trouvé dans les dossiers configurés. Indique où se trouvent tes vidéos dans{' '}
-            <code className="rounded bg-brand-soft px-1.5 py-0.5 text-sm">backend/.env</code>, puis relance un scan.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link to="/settings#mediatheque" className="inline-flex items-center gap-2 atelier-btn-primary btn-primary-states rounded-md px-5 py-3 font-semibold transition">
-              <FolderSearch className="size-5" /> Configurer mes dossiers
-            </Link>
-            <button
-              type="button"
-              onClick={() => setDemoPref('auto')}
-              className="inline-flex items-center gap-2 rounded-md border border-edge-soft bg-brand-faint px-5 py-3 font-semibold hover:bg-brand-soft"
-            >
-              <Sparkles className="size-5" /> Voir la démo
-            </button>
+      <>
+        <TopBar title="Accueil" />
+        <div className="grid min-h-[70vh] place-items-center px-6 text-center">
+          <div className="max-w-md">
+            <Film aria-hidden className="mx-auto size-6 text-faint" strokeWidth={1.75} />
+            <h2 className="mt-3 text-lg font-semibold">Ta médiathèque est vide</h2>
+            <p className="mt-1.5 text-muted">
+              Aucun film ni série n'a été trouvé dans les dossiers configurés. Indique où se trouvent tes vidéos dans{' '}
+              <code>backend/.env</code>, puis relance un scan.
+            </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-2">
+              <Link to="/settings#mediatheque" className="btn btn-primary">
+                <FolderSearch aria-hidden /> Configurer mes dossiers
+              </Link>
+              <button type="button" onClick={() => setDemoPref('auto')} className="btn">
+                <Sparkles aria-hidden /> Voir la démo
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
     <>
-      <HeroBanner item={featured} onMoreInfo={setSelected} />
+      <TopBar title="Accueil" />
 
-      {/* Les rangées remontent sur le bas de la bannière, comme sur la maquette */}
-      <div className="relative z-10 -mt-32 space-y-10">
+      <div className="p-4 md:p-5">
+        <HeroBanner item={featured} onMoreInfo={setSelected} />
+      </div>
+
+      <div className="space-y-7 pt-2 pb-8">
         {continueWatching.length > 0 && (
-          <Carousel title="Continuer la lecture">
+          <Carousel title="Continuer la lecture" count={continueWatching.length}>
             {continueWatching.map((item) => (
               <ContinueCard key={item.id} item={item} />
             ))}
@@ -54,7 +70,7 @@ export default function HomePage() {
         )}
 
         {library.movies.length > 0 && (
-          <Carousel title="Mes Films">
+          <Carousel title="Mes Films" count={library.movies.length}>
             {library.movies.map((item) => (
               <MediaCard key={item.id} item={item} onSelect={setSelected} />
             ))}
@@ -62,7 +78,7 @@ export default function HomePage() {
         )}
 
         {library.shows.length > 0 && (
-          <Carousel title="Mes Séries">
+          <Carousel title="Mes Séries" count={library.shows.length}>
             {library.shows.map((item) => (
               <MediaCard key={item.id} item={item} onSelect={setSelected} />
             ))}

@@ -1,37 +1,16 @@
 <!doctype html>
-<html lang="fr" data-atelier-app="cine" class="dark" data-theme="dark">
+<html lang="fr" data-atelier-app="cine">
   <head>
     <meta charset="UTF-8" />
+    <!-- Le thème (préférence commune à la suite, src/brand/atelier-theme.js) est posé avant l'affichage
+         par un script bloquant inséré à la fin de <head> (voir vite.config.js) : data-theme + classe dark sur <html>. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- ≈ --atelier-bg de Ciné (sombre par défaut) ; mis à jour selon le thème actif -->
-    <meta name="theme-color" content="#120b10" />
-    <script>
-      // Applique le thème avant le premier rendu (pas de flash). Même logique que src/lib/theme.js :
-      // préférence Clair / Sombre / Système dans localStorage « atelier-cine-theme », Sombre par défaut.
-      // Sombre : class="dark" + data-theme="dark" ; clair : data-theme="light" sans classe dark.
-      (function () {
-        var root = document.documentElement;
-        var pref = 'dark';
-        try {
-          var stored = localStorage.getItem('atelier-cine-theme');
-          if (stored === 'light' || stored === 'dark' || stored === 'system') pref = stored;
-        } catch (e) {}
-        var dark = pref === 'dark';
-        if (pref === 'system') {
-          try {
-            dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          } catch (e) {}
-        }
-        root.classList.toggle('dark', dark);
-        root.setAttribute('data-theme', dark ? 'dark' : 'light');
-        root.style.colorScheme = dark ? 'dark' : 'light';
-        var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', dark ? '#120b10' : '#fcf3f6');
-      })();
-    </script>
-    <link rel="icon" type="image/png" href="/favicon-64.png" />
+    <!-- = --atelier-bg ; mis à jour selon le thème actif (src/lib/theme.js) -->
+    <meta name="theme-color" content="#0f1012" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>Atelier_Ciné</title>
+    <title>Atelier Ciné</title>
   </head>
   <body>
     <div id="root"></div>

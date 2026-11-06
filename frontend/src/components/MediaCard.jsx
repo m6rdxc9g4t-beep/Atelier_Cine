@@ -1,40 +1,42 @@
 import { useMemo } from 'react';
 import { generateArtwork } from '../lib/artwork.js';
 
-/** Affiche verticale (format 2:3) — utilisée par "Mes Films", "Mes Séries" et les grilles. */
-export default function MediaCard({ item, onSelect, className = 'w-36 sm:w-40 xl:w-44' }) {
+/**
+ * Affiche verticale (2:3) suivie du titre et de l'année — « Mes Films », « Mes Séries » et les grilles.
+ * L'affiche (ou la vignette générée, sans texte) porte la couleur ; la légende reste dans le système.
+ */
+export default function MediaCard({ item, onSelect, className = 'w-[136px] sm:w-[148px] xl:w-[160px]' }) {
   const art = useMemo(
     () => item.poster ?? generateArtwork({ seed: item.id, format: 'poster', ...item.art }),
     [item.poster, item.id, item.art],
   );
+  const is4k = item.quality?.includes('4K Ultra HD');
+  const meta = [item.year, item.genres?.[0]].filter(Boolean).join(' · ');
 
   return (
     <button
       type="button"
       onClick={() => onSelect?.(item)}
-      className={`group relative shrink-0 snap-start overflow-hidden rounded-lg bg-surface-2 text-left text-white shadow-lg shadow-black/30 outline-none
-        ring-brand transition duration-300 hover:shadow-[var(--atelier-glow-strong)] focus-visible:shadow-[var(--atelier-glow-strong)] hover:z-10 hover:scale-[1.04] hover:ring-[3px] focus-visible:scale-[1.04] focus-visible:ring-[3px] ${className}`}
+      className={`group shrink-0 snap-start text-left outline-none ${className}`}
       aria-label={`${item.title}${item.year ? ` (${item.year})` : ''}`}
     >
-      <div className="aspect-[2/3] w-full">
-        <img src={art} alt="" loading="lazy" className="size-full object-cover" />
-      </div>
-
-      {/* Titre incrusté seulement si l'affiche est générée */}
-      {!item.poster && (
-        <div className="absolute inset-x-0 bottom-0 p-3 pb-4 text-center">
-          <p className="font-display text-[1.05rem] leading-tight font-bold tracking-wide text-white uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] sm:text-lg">
-            {item.title}
-          </p>
-        </div>
-      )}
-
-      <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-between p-2 opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
-        {item.quality?.includes('4K Ultra HD') && (
-          <span className="rounded bg-black/70 px-1.5 py-0.5 text-[0.65rem] font-semibold tracking-wide">4K</span>
+      <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-surface-2 outline-offset-2 outline-brand group-focus-visible:outline-2">
+        <img
+          src={art}
+          alt=""
+          loading="lazy"
+          className="size-full object-cover transition-[filter] duration-200 group-hover:brightness-110"
+        />
+        {/* Filet intérieur : l'affiche garde un bord net sur fond clair comme sombre. */}
+        <span aria-hidden className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-black/10 ring-inset dark:ring-white/6" />
+        {is4k && (
+          <span className="absolute top-1.5 left-1.5 rounded-sm bg-black/65 px-1 py-px text-[10px] leading-4 font-semibold text-white">
+            4K
+          </span>
         )}
-        {item.year && <span className="rounded bg-black/70 px-1.5 py-0.5 text-[0.65rem]">{item.year}</span>}
       </div>
+      <p className="mt-2 truncate text-sm leading-tight font-medium text-fg">{item.title}</p>
+      {meta && <p className="mt-0.5 truncate text-xs text-faint tabular-nums">{meta}</p>}
     </button>
   );
 }

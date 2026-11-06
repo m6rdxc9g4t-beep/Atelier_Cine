@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, SearchX } from 'lucide-react';
+import TopBar from '../components/TopBar.jsx';
 import MediaCard from '../components/MediaCard.jsx';
 import DetailsModal from '../components/DetailsModal.jsx';
 import { useLibrary } from '../hooks/useLibrary.jsx';
@@ -10,7 +11,7 @@ const VIEWS = {
   recent: { title: 'Ajoutés récemment', pick: (ctx) => ctx.recent.slice(0, 40) },
 };
 
-/** Grille de posters pour /movies, /shows et /recent. */
+/** Grille d'affiches pour /movies, /shows et /recent ; la recherche vit dans la barre haute. */
 export default function BrowsePage({ view }) {
   const ctx = useLibrary();
   const { title, pick } = VIEWS[view];
@@ -24,36 +25,41 @@ export default function BrowsePage({ view }) {
   }, [ctx, pick, query]);
 
   return (
-    <div className="px-5 pt-24 sm:px-10 lg:px-16">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-4xl font-semibold halo-text">{title}</h1>
-          <p className="mt-1 text-sm text-muted">
-            {items.length} titre{items.length > 1 ? 's' : ''}
-          </p>
-        </div>
-        <label className="flex w-full items-center gap-2 rounded-md border border-edge-soft bg-field px-3 py-2 text-sm focus-field sm:w-72">
-          <Search className="size-4 text-muted" />
+    <>
+      <TopBar title={title} count={items.length}>
+        <label className="input flex h-[30px] w-full items-center gap-2 px-2.5 text-sm md:w-64">
+          <Search aria-hidden className="size-4 shrink-0 text-faint" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Titre ou genre…"
-            className="w-full bg-transparent outline-none placeholder:text-muted/80"
+            aria-label={`Rechercher dans ${title.toLowerCase()}`}
+            className="w-full min-w-0 bg-transparent outline-none placeholder:text-faint"
           />
         </label>
+      </TopBar>
+
+      <div className="px-4 pt-4 pb-8 md:px-5 md:pt-5">
+        {items.length ? (
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(104px,1fr))] gap-x-3 gap-y-5 sm:grid-cols-[repeat(auto-fill,minmax(148px,1fr))] md:gap-x-4">
+            {items.map((item) => (
+              <MediaCard key={item.id} item={item} onSelect={setSelected} className="w-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid place-items-center py-24 text-center">
+            <SearchX aria-hidden className="size-6 text-faint" strokeWidth={1.75} />
+            <p className="mt-3 text-lg font-semibold">Aucun titre ne correspond.</p>
+            {query && (
+              <button type="button" onClick={() => setQuery('')} className="btn mt-4">
+                Effacer la recherche
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
-      {items.length ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-5 sm:grid-cols-[repeat(auto-fill,minmax(11rem,1fr))]">
-          {items.map((item) => (
-            <MediaCard key={item.id} item={item} onSelect={setSelected} className="w-full" />
-          ))}
-        </div>
-      ) : (
-        <p className="py-20 text-center text-muted">Aucun titre ne correspond.</p>
-      )}
-
       <DetailsModal item={selected} onClose={() => setSelected(null)} />
-    </div>
+    </>
   );
 }
