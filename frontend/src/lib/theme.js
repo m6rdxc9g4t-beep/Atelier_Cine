@@ -10,12 +10,12 @@ import { desktop } from './desktop.js';
 
 export const THEME_OPTIONS = [
   { value: 'system', label: 'Système', hint: 'Suit le réglage clair ou sombre de ton appareil, et change avec lui.' },
-  { value: 'light', label: 'Clair', hint: 'Fond clair et neutre, pour les pièces éclairées.' },
-  { value: 'dark', label: 'Sombre', hint: 'Fond quasi noir : l’ambiance salle de cinéma.' },
+  { value: 'light', label: 'Clair', hint: 'Fond crème, pour les pièces éclairées.' },
+  { value: 'dark', label: 'Sombre', hint: 'Fond bleu nuit : l’ambiance salle de cinéma.' },
 ];
 
 /** Couleur de la barre du navigateur / de la fenêtre = --atelier-bg dans chaque thème. */
-export const THEME_COLORS = { dark: '#0f1012', light: '#fbfbfc' };
+export const THEME_COLORS = { dark: '#0b1220', light: '#f8f4ec' }; // bleu nuit / crème
 
 const api = () => (typeof window !== 'undefined' ? window.atelierTheme : undefined);
 const isPreference = (v) => v === 'light' || v === 'dark' || v === 'system';

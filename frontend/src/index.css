@@ -1,9 +1,10 @@
 @import 'tailwindcss';
 
 /* Charte v2 « Linear » de la suite Atelier (src/brand/atelier-brand.css, règles : Atelier_Deploy/DESIGN.md) :
-   structure neutre gris froid commune à toute la suite, en clair comme en sombre ; la signature de Ciné
+   structure commune à toute la suite, crème en clair, bleu nuit en sombre ; la signature de Ciné
    (magenta #cd3d83) ne sert qu'à l'accent : bouton principal, sélection, focus, liens, progression, icône.
    Plat au repos, traits de 1 px, Inter 13 px. Les affiches et vignettes (le contenu) portent la couleur.
+   Chiffres clés (Paramètres → Médiathèque) : cartes .atelier-kpi de la marque commune (coins de 12 px).
 
    Thème : sombre = <html class="dark" data-theme="dark">, clair = <html data-theme="light">,
    posé avant l'affichage par src/brand/atelier-theme.js (préférence commune à la suite).
@@ -113,7 +114,7 @@
     text-decoration-thickness: 1px;
   }
   dialog::backdrop {
-    background: rgb(10 11 13 / 0.55);
+    background: rgb(5 9 18 / 0.55);
   }
   code {
     @apply rounded-sm bg-surface-2 px-1 py-px font-mono text-[0.9em];
@@ -181,7 +182,7 @@
       &[aria-pressed='true'] {
         @apply bg-surface text-fg;
         box-shadow:
-          0 1px 2px rgb(0 0 0 / 0.08),
+          0 1px 2px rgb(40 30 15 / 0.08),
           0 0 0 1px var(--atelier-line);
       }
       & svg {

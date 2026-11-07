@@ -81,8 +81,15 @@ export default function SettingsPage() {
     }
   };
 
-  const plural = (n, word) => `${n} ${word}${n > 1 ? 's' : ''}`;
-  const counts = hasReal && !isDemo ? `${plural(library.movies.length, 'film')} · ${plural(library.shows.length, 'série')}` : null;
+  // Chiffres de la médiathèque indexée (cartes de chiffres), seulement pour les vrais fichiers.
+  const counts =
+    hasReal && !isDemo
+      ? [
+          ['Films', library.movies.length],
+          ['Séries', library.shows.length],
+          ['Épisodes', library.shows.reduce((n, show) => n + (Number(show.episodes) || 0), 0)],
+        ]
+      : null;
 
   return (
     <>
@@ -161,11 +168,21 @@ export default function SettingsPage() {
                   ? 'Serveur intégré injoignable — relance l’app'
                   : 'API injoignable — lance « npm run dev » à la racine du projet'}
             </Status>
-            {counts && <span className="text-sm text-muted tabular-nums">{counts} indexés</span>}
             {scannedAt && (
               <span className="text-sm text-faint tabular-nums">Dernier scan : {new Date(scannedAt).toLocaleString('fr-FR')}</span>
             )}
           </div>
+
+          {counts && (
+            <dl aria-label="Fichiers indexés" className="mb-5 grid grid-cols-3 gap-2">
+              {counts.map(([label, n]) => (
+                <div key={label} className="atelier-kpi">
+                  <dt className="atelier-kpi__label">{label}</dt>
+                  <dd className="atelier-kpi__value">{n.toLocaleString('fr-FR')}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
 
           <FoldersEditor onSaved={() => reload()} />
 
