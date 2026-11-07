@@ -9,7 +9,7 @@ const SIZES = {
 
 /** Pastille ronde du profil, dans la couleur choisie pour lui (donnée du profil). */
 export default function Avatar({ profile, size = 'md', className = '' }) {
-  const color = profile?.color ?? '#5f636c';
+  const color = profile?.color ?? '#5f574b';
   return (
     <span
       aria-hidden

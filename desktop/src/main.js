@@ -37,7 +37,7 @@ if (existsSync(envFile)) process.loadEnvFile(envFile); // réglages avancés opt
 // (theme.json) pour que la fenêtre s'ouvre déjà dans la bonne couleur. Défaut : Système, comme l'interface.
 // ---------------------------------------------------------------------------
 const themeFile = path.join(userData, 'theme.json');
-const WINDOW_BG = { dark: '#0f1012', light: '#fbfbfc' }; // = --atelier-bg (charte v2) dans chaque thème
+const WINDOW_BG = { dark: '#0b1220', light: '#f8f4ec' }; // = --atelier-bg dans chaque thème : bleu nuit / crème
 const isThemePreference = (v) => v === 'light' || v === 'dark' || v === 'system';
 
 function readThemePreference() {
